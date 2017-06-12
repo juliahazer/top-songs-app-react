@@ -6,16 +6,47 @@ class Navbar extends Component {
     super(props);
     this.state = {
       activeId: 'Pop',
-      activeGenre: 14,
+      activeGenre: 14
     }
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(e){
-
+    var activeId = e.target.id;
+    var activeGenre = Number(e.target.attributes.getNamedItem('data').value);
+    this.setState({activeId, activeGenre});
   }
 
   render() {
+    let mapCategories = (el) => {
+      var id = el.id.toLowerCase();
+      var active = "";
+      var classTxt;
+      if (el.mainCategory){
+        activeSubcategory = false;
+        classTxt = 'category';
+      } else {
+        classTxt = 'subcategory'
+      }
+      if (this.state.activeGenre === el.genre){
+        active="active";
+      }
+      return (
+        <li className={active} key={id}>
+          <a
+            onClick={this.handleClick} 
+            id={id} 
+            className="category"
+            data={el.genre}>
+            {el.id}
+          </a>
+        </li>
+      );
+    }
+
+    var activeSubcategory = true;
+    var categories = this.props.mainCategories.map(mapCategories);
+    var subcategories = this.props.subCategories.map(mapCategories);
     
     return (
       <nav className="navbar navbar-custom navbar-inverse navbar-fixed-top">
@@ -50,21 +81,12 @@ class Navbar extends Component {
           {/* Navbar links and Other dropdown */}
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul className="nav navbar-nav">
-              {}
-              <li className="active"><a className="category" id="all" data-genre="0" onClick="">All</a></li>
-              <li><a onClick="" className="category" id="pop" data-genre="14">Pop</a></li>
-              <li><a onClick="" className="category" id="rock" data-genre="21">Rock</a></li>
-              <li><a onClick="" className="category" id="country" data-genre="6">Country</a></li>
-              <li><a onClick="" className="category" id="latino" data-genre="12">Latino</a></li>
+              {categories}
 
               <li className="dropdown">
-                <a onClick="" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Other <span className="caret"></span></a>
+                <a onClick="" className={"dropdown-toggle" + activeSubcategory} data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Other <span className="caret"></span></a>
                 <ul className="dropdown-menu">
-                  <li><a onClick="" className="subCategory" id="alternative" data-genre="20">Alternative</a></li>
-                  <li><a onClick="" className="subCategory" id="classical" data-genre="5">classical</a></li>
-                  <li><a onClick="" className="subCategory" id="jazz" data-genre="11">Jazz</a></li>
-                  <li><a onClick="" className="subCategory" id="rb-soul" data-genre="15">R&amp;B/Soul</a></li>
-                  <li><a onClick="" className="subCategory" id="world" data-genre="19">World</a></li>
+                  {subcategories}
                 </ul>
               </li>
             </ul>
@@ -77,16 +99,16 @@ class Navbar extends Component {
 
 Navbar.defaultProps =  { 
   mainCategories: [
-      { id: 'Pop', genre: 14 },
-      { id: 'Rock', genre: 21 },
-      { id: 'Country', genre: 6 },
-      { id: 'Latino', genre: 12 }
+      { id: 'Pop', genre: 14, mainCategory: true},
+      { id: 'Rock', genre: 21, mainCategory: true},
+      { id: 'Country', genre: 6, mainCategory: true },
+      { id: 'Latino', genre: 12, mainCategory: true }
     ],
   subCategories: [
-      { id: 'Alternative', genre: 20 },
-      { id: 'Classical', genre: 5 },
-      { id: 'Jazz', genre: 11 },
-      { id: 'World', genre: 19 }
+      { id: 'Alternative', genre: 20, mainCategory: false },
+      { id: 'Classical', genre: 5, mainCategory: false },
+      { id: 'Jazz', genre: 11, mainCategory: false },
+      { id: 'World', genre: 19, mainCategory: false }
   ]
 }
 
