@@ -13,6 +13,7 @@ class SongTable extends Component {
           artist={song.artist}
           bioUrl={song.bioUrl}
           nameBio={song.namBio}
+          videoId = {song.videoId}
         />
       )
     });

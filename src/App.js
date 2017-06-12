@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Navbar from './Navbar';
 import SongTable from './SongTable';
-import './App.css';
-import $ from 'jquery';
 import 'bootstrap/dist/css/bootstrap.css';
+import $ from 'jquery';
+import './App.css';
 // import {Bootstrap, Jumbotron, Button, Navbar} from 'react-bootstrap';
 // import 'bootstrap/dist/js/bootstrap';
 

@@ -2,7 +2,21 @@ import React, { Component } from 'react';
 import './Navbar.css';
 
 class Navbar extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      activeId: 'Pop',
+      activeGenre: 14,
+    }
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e){
+
+  }
+
   render() {
+    
     return (
       <nav className="navbar navbar-custom navbar-inverse navbar-fixed-top">
         <div className="container-fluid">
@@ -36,6 +50,7 @@ class Navbar extends Component {
           {/* Navbar links and Other dropdown */}
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul className="nav navbar-nav">
+              {}
               <li className="active"><a className="category" id="all" data-genre="0" onClick="">All</a></li>
               <li><a onClick="" className="category" id="pop" data-genre="14">Pop</a></li>
               <li><a onClick="" className="category" id="rock" data-genre="21">Rock</a></li>
@@ -58,6 +73,21 @@ class Navbar extends Component {
       </nav>
     )
   }
+}
+
+Navbar.defaultProps =  { 
+  mainCategories: [
+      { id: 'Pop', genre: 14 },
+      { id: 'Rock', genre: 21 },
+      { id: 'Country', genre: 6 },
+      { id: 'Latino', genre: 12 }
+    ],
+  subCategories: [
+      { id: 'Alternative', genre: 20 },
+      { id: 'Classical', genre: 5 },
+      { id: 'Jazz', genre: 11 },
+      { id: 'World', genre: 19 }
+  ]
 }
 
 export default Navbar;
