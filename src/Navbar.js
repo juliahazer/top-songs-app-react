@@ -15,6 +15,7 @@ class Navbar extends Component {
     var activeId = e.target.id;
     var activeGenre = Number(e.target.attributes.getNamedItem('data').value);
     this.setState({activeId, activeGenre});
+    this.props.clickAction(this.state.activeGenre);
   }
 
   render() {
@@ -36,7 +37,7 @@ class Navbar extends Component {
           <a
             onClick={this.handleClick} 
             id={id} 
-            className="category"
+            className={classTxt}
             data={el.genre}>
             {el.id}
           </a>

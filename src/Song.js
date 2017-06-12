@@ -5,20 +5,6 @@ import './Song.css';
 class Song extends Component {
   constructor(props){
     super(props);
-    // this.state = {
-    //   youtubePlayer: new YT.Player(`player${this.props.position}`, {
-    //     height: '300',
-    //     width: '500',
-    //     videoId: this.props.videoId,
-    //     playerVars: {
-    //       'origin': 'localhost:3000' //NEED TO CHANGE
-    //     }//,
-        //events: {
-        //  'onStateChange': onPlayerStateChange
-        //}
-      //});
-      // })
-    // }
   }
 
   render() {

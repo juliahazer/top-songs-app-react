@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Navbar from './Navbar';
 import SongTable from './SongTable';
 import 'bootstrap/dist/css/bootstrap.css';
 import $ from 'jquery';
 import './App.css';
+import Navbar from './Navbar';
 // import {Bootstrap, Jumbotron, Button, Navbar} from 'react-bootstrap';
 // import 'bootstrap/dist/js/bootstrap';
 
@@ -19,12 +19,24 @@ class App extends Component {
       songs: [],
       itunesAPIUrl: ''
     };
+    this.handleNavbarChange = this.handleNavbarChange.bind(this);
   }
 
-  componentWillMount(){
+  //life-cycle methods
+  componentWillMount = () => {
+    this.newApisCall();
+  }
+
+  //event handlers
+  handleNavbarChange(genreNum){
+    this.setState({genreNum});
+    this.newApisCall();
+  }
+
+  //custom helper methods
+  newApisCall = () => {
     var itunesAPIUrl = this.setItunesAPIUrl(this.state.countryCode, this.state.totalCount, this.state.genreNum);
     this.setState({itunesAPIUrl});
-
     /*itunes api call, then w/ results, 
     create an object for each song, 
     and store these objects in songsArr*/
@@ -63,7 +75,18 @@ class App extends Component {
     });
   }
 
-  setYouTubeAPIUrl(song){
+  setItunesAPIUrl = (countryCode, totalCount, genreNum) => {
+    var itunesAPIUrl = "https://itunes.apple.com/" + countryCode +
+      "/rss/topsongs/limit=" +
+      totalCount + "/";
+    if (genreNum !== 0){
+      itunesAPIUrl += "genre=" + genreNum + "/";
+    }
+    itunesAPIUrl += "json";
+    return itunesAPIUrl;
+  }
+
+  setYouTubeAPIUrl = (song) =>{
     var key = 'AIzaSyDiv_c2pu67HdptBE4Xu0AFpcTCXl72wbI';
     var artistName = song.artist;
     var songName;
@@ -82,7 +105,7 @@ class App extends Component {
 
   /*Create a song object with songName, position, artist,
   bioUrl, nameBio info based on itunes API results*/
-  createSongObject(song, index){
+  createSongObject = (song, index) => {
     var songObj = {};
     songObj.songName = song['im:name'].label;
     songObj.position = index + 1;
@@ -99,24 +122,12 @@ class App extends Component {
     return songObj;
   }
 
-  
-  setItunesAPIUrl(countryCode, totalCount, genreNum){
-    var itunesAPIUrl = "https://itunes.apple.com/" + countryCode +
-      "/rss/topsongs/limit=" +
-      totalCount + "/";
-    if (genreNum !== 0){
-      itunesAPIUrl += "genre=" + genreNum + "/";
-    }
-    itunesAPIUrl += "json";
-    return itunesAPIUrl;
-  }
-
   render() {
 
     return (
       <div className="App">
 
-        <Navbar/>
+        <Navbar key='0' clickAction={this.handleNavbarChange}/>
 
         <div className="container-fluid">
           <div id="headingDiv">
