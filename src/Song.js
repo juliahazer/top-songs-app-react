@@ -10,7 +10,7 @@ class Song extends Component {
   render() {
     var createYRPlayer
     return (
-      <tr id={"pos" + this.props.position} className="songRow">
+      <tr id={"pos" + this.props.position} className="songRow text-left">
         <td>
           <span className="position">{this.props.position}</span>
         </td>

@@ -5,22 +5,23 @@ class Navbar extends Component {
   constructor(props){
     super(props);
     this.state = {
-      activeId: 'Pop',
-      activeGenre: 14
+      activeName: 'All',
+      activeGenre: 0
     }
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(e){
-    var activeId = e.target.id;
+    var activeName = e.target.name;
     var activeGenre = Number(e.target.attributes.getNamedItem('data').value);
-    this.setState({activeId, activeGenre});
-    this.props.clickAction(this.state.activeGenre);
+    this.setState({activeName, activeGenre}, function() {
+      this.props.clickAction(this.state.activeName, this.state.activeGenre);
+    });
   }
 
   render() {
     let mapCategories = (el) => {
-      var id = el.id.toLowerCase();
+      var name = el.name.toLowerCase();
       var active = "";
       var classTxt;
       if (el.mainCategory){
@@ -33,13 +34,13 @@ class Navbar extends Component {
         active="active";
       }
       return (
-        <li className={active} key={id}>
+        <li className={active} key={name}>
           <a
             onClick={this.handleClick} 
-            id={id} 
+            name={name} 
             className={classTxt}
             data={el.genre}>
-            {el.id}
+            {el.name}
           </a>
         </li>
       );
@@ -100,16 +101,17 @@ class Navbar extends Component {
 
 Navbar.defaultProps =  { 
   mainCategories: [
-      { id: 'Pop', genre: 14, mainCategory: true},
-      { id: 'Rock', genre: 21, mainCategory: true},
-      { id: 'Country', genre: 6, mainCategory: true },
-      { id: 'Latino', genre: 12, mainCategory: true }
+      { name: 'All', genre: 0, mainCategory: true },
+      { name: 'Pop', genre: 14, mainCategory: true },
+      { name: 'Rock', genre: 21, mainCategory: true },
+      { name: 'Country', genre: 6, mainCategory: true },
+      { name: 'Latino', genre: 12, mainCategory: true }
     ],
   subCategories: [
-      { id: 'Alternative', genre: 20, mainCategory: false },
-      { id: 'Classical', genre: 5, mainCategory: false },
-      { id: 'Jazz', genre: 11, mainCategory: false },
-      { id: 'World', genre: 19, mainCategory: false }
+      { name: 'Alternative', genre: 20, mainCategory: false },
+      { name: 'Classical', genre: 5, mainCategory: false },
+      { name: 'Jazz', genre: 11, mainCategory: false },
+      { name: 'World', genre: 19, mainCategory: false }
   ]
 }
 

@@ -13,6 +13,7 @@ class App extends Component {
     this.state = {
       youtubeAPIUrl: '',
       countryCode: 'us',
+      country: 'US',
       categoryName: 'ALL',
       genreNum: 0,
       totalCount: 5,
@@ -28,8 +29,8 @@ class App extends Component {
   }
 
   //event handlers
-  handleNavbarChange(genreNum){
-    this.setState({genreNum});
+  handleNavbarChange(categoryName, genreNum){
+    this.setState({categoryName, genreNum});
     this.newApisCall();
   }
 
@@ -131,8 +132,12 @@ class App extends Component {
 
         <div className="container-fluid">
           <div id="headingDiv">
-            {/*<h2 className="section-heading" id="categoryHeading"></h2>
-            <h3 className="section-subheading" id="categorySubheading"></h3>*/}
+            <h2 className="section-heading" id="categoryHeading">
+              {this.state.categoryName}
+            </h2>
+            <h3 className="section-subheading" id="categorySubheading">
+              Top {this.state.totalCount} Songs - {this.state.country} 
+            </h3>
 
             <br />
             {/* # of Songs Selection Button */}
@@ -171,6 +176,10 @@ class App extends Component {
                 <li><a data-country="vn" className="countries" onClick="">Vietnam</a></li>
               </ul>
             </div>
+          </div>
+
+          {/* Info about the song playing */}
+          <div id="songPlaying">
           </div>
         </div>
 
