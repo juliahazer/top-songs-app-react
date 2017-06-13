@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {DropdownButton, MenuItem} from 'react-bootstrap';
 import './Navbar.css';
 
 class Navbar extends Component {
@@ -6,20 +7,29 @@ class Navbar extends Component {
     super(props);
     this.state = {
       activeName: 'All',
-      activeGenre: 0
+      activeGenre: 0,
+      activeSubcategory: false
     }
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(e){
+    e.preventDefault();
     var activeName = e.target.name;
     var activeGenre = Number(e.target.attributes.getNamedItem('data').value);
-    this.setState({activeName, activeGenre}, function() {
+    var activeSubcategory;
+    if (e.target.className === 'category'){
+      activeSubcategory = false;
+    } else {
+      activeSubcategory = true;
+    }
+    this.setState({activeName, activeGenre, activeSubcategory}, function() {
       this.props.clickAction(this.state.activeName, this.state.activeGenre);
     });
   }
 
   render() {
+    var activeSubcategory = true;
     let mapCategories = (el) => {
       var name = el.name.toLowerCase();
       var active = "";
@@ -33,23 +43,41 @@ class Navbar extends Component {
       if (this.state.activeGenre === el.genre){
         active="active";
       }
-      return (
-        <li className={active} key={name}>
-          <a
-            onClick={this.handleClick} 
-            name={name} 
+      if (el.mainCategory){
+        return (
+          <li className={active} key={name}>
+            <a
+              onClick={this.handleClick} 
+              name={name} 
+              href=""
+              className={classTxt}
+              data={el.genre}>
+              {el.name}
+            </a>
+          </li>
+        );
+      } else {
+        return (
+          <MenuItem 
+            onClick={this.handleClick}
+            key={name} 
+            name={name}
+            href="" 
             className={classTxt}
             data={el.genre}>
             {el.name}
-          </a>
-        </li>
-      );
-    }
-
-    var activeSubcategory = true;
+          </MenuItem>
+        );
+      }
+    } 
+    var activeClass = '';
     var categories = this.props.mainCategories.map(mapCategories);
     var subcategories = this.props.subCategories.map(mapCategories);
-    
+    var dropdownClass = '';
+    if (this.state.activeSubcategory){
+      dropdownClass = " activeDropdown"
+    }
+
     return (
       <nav className="navbar navbar-custom navbar-inverse navbar-fixed-top">
         <div className="container-fluid">
@@ -64,20 +92,6 @@ class Navbar extends Component {
             <div id="brandTitle">
               <a className="navbar-brand" onClick="">Top Songs</a>
             </div>
-            {/*<div id="playlistControls">
-              <a id="prevSong" className="resume btn btn-default btn-sm" role="button" href="#">
-                <span className="glyphicon glyphicon-backward" aria-hidden="true"></span>
-              </a>
-              <a id="playPauseSong" className="firstStart btn btn-default btn-sm" role="button" href="#">
-                <span className="glyphicon glyphicon-play" aria-hidden="true"></span>
-              </a>
-              <a id="muteSong" className="btn btn-default btn-sm" role="button" href="#">
-                <span className="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
-              </a>
-              <a id="nextSong" className="resume btn btn-default btn-sm" role="button" href="#">
-                <span className="glyphicon glyphicon-forward" aria-hidden="true"></span>
-              </a>
-            </div>*/}
           </div> {/*  /.navbar-header */}
 
           {/* Navbar links and Other dropdown */}
@@ -85,12 +99,13 @@ class Navbar extends Component {
             <ul className="nav navbar-nav">
               {categories}
 
-              <li className="dropdown">
-                <a onClick="" className={"dropdown-toggle" + activeSubcategory} data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Other <span className="caret"></span></a>
-                <ul className="dropdown-menu">
-                  {subcategories}
-                </ul>
-              </li>
+              <DropdownButton 
+                title='Other' 
+                key='Other' 
+                id='dropdown-basic-other' 
+                className={"DropdownButton" + dropdownClass}>
+                {subcategories}
+              </DropdownButton>
             </ul>
           </div>{/*  /.navbar-collapse */}
         </div>{/*  /.container-fluid */}
@@ -105,7 +120,7 @@ Navbar.defaultProps =  {
       { name: 'Pop', genre: 14, mainCategory: true },
       { name: 'Rock', genre: 21, mainCategory: true },
       { name: 'Country', genre: 6, mainCategory: true },
-      { name: 'Latino', genre: 12, mainCategory: true }
+      { name: 'Latino', genre: 12, mainCategory: true },
     ],
   subCategories: [
       { name: 'Alternative', genre: 20, mainCategory: false },

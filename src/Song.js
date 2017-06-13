@@ -28,10 +28,10 @@ class Song extends Component {
           </div>
         </td>
         <td>
-          {/*<YouTubePlayer 
+          <YouTubePlayer 
             key={"player" + this.props.position} 
             id={"player" + this.props.position}
-            videoId = {this.props.videoId}/> */}
+            videoId = {this.props.videoId}/> 
         </td>
       </tr>
     )

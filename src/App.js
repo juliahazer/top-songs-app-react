@@ -4,8 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import $ from 'jquery';
 import './App.css';
 import Navbar from './Navbar';
-// import {Bootstrap, Jumbotron, Button, Navbar} from 'react-bootstrap';
-// import 'bootstrap/dist/js/bootstrap';
+import {DropdownButton, MenuItem} from 'react-bootstrap';
 
 class App extends Component {
   constructor(props){
@@ -124,7 +123,6 @@ class App extends Component {
   }
 
   render() {
-
     return (
       <div className="App">
 
@@ -140,6 +138,15 @@ class App extends Component {
             </h3>
 
             <br />
+
+            {/*<DropdownButton bsStyle='default' title='Default' key='0' id={`dropdown-basic-0`}>
+              <MenuItem eventKey="1">Action</MenuItem>
+              <MenuItem eventKey="2">Another action</MenuItem>
+              <MenuItem eventKey="3" active>Active Item</MenuItem>
+              <MenuItem divider />
+              <MenuItem eventKey="4">Separated link</MenuItem>
+            </DropdownButton>*/}
+
             {/* # of Songs Selection Button */}
             <div className="btn-group" id="numSongsBtn">
               <button type="button" className="btnName btn btn-default"># of Songs</button>

@@ -1,4 +1,44 @@
 /************* NAV BAR *************/
+.DropdownButton {
+  background-color: #222222;
+  border-color: transparent;
+  text-transform: uppercase;
+  color: white;
+  padding-top: 14px;
+  border-radius: 0px;
+  padding-bottom: 14px;
+}
+
+.DropdownButton:hover,
+.DropdownButton:active,
+.DropdownButton:focus,
+.btn-default:active:hover, 
+.btn-default.active:hover, 
+.open > .dropdown-toggle.btn-default:hover, 
+.btn-default:active:focus, 
+.btn-default.active:focus, 
+.open > .dropdown-toggle.btn-default:focus, 
+.btn-default:active.focus, 
+.btn-default.active.focus, 
+.open > .dropdown-toggle.btn-default.focus  {
+  background-color: #222222;
+  border: none;
+  color: #fed136;
+  outline: none;
+}
+
+.DropdownButton.activeDropdown {
+  color: white;
+  background-color: #fec503;
+}
+
+.btn-default:active, 
+.btn-default.active, 
+.open > .dropdown-toggle.btn-default {
+  background-color: #222222;
+} 
+
+
 /*Resource used for nav bar styling: Bootstrap theme: Agency
   https://github.com/BlackrockDigital/startbootstrap-agency/blob/master/css/agency.css
 */
