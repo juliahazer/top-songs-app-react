@@ -40,7 +40,7 @@ body {
 #headingDiv button.dropdown-toggle:hover,
 #headingDiv button.dropdown-toggle:focus,
 #headingDiv button.dropdown-toggle:active{
-  background-color: #fec503;
+  background-color: #222222;
 }
 
 #headingDiv .btn-group li a {
@@ -61,3 +61,4 @@ body {
   background-color: #fec503;
   color: white;
 }
+
