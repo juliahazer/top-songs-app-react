@@ -22,3 +22,42 @@ body {
   font-weight: normal;
   font-style: italic;
 }
+
+/************* # OF SONGS/COUNTRIES BTNS *************/
+#headingDiv div#numSongsBtn,
+#headingDiv div#countriesBtn {
+  padding-right: 5px;
+  margin-bottom: 8px;
+}
+
+#headingDiv button.btnName,
+#headingDiv button.btnName:focus,
+#headingDiv button.btnName:hover {
+  background-color: #222222;
+  color: white;
+}
+
+#headingDiv button.dropdown-toggle:hover,
+#headingDiv button.dropdown-toggle:focus,
+#headingDiv button.dropdown-toggle:active{
+  background-color: #fec503;
+}
+
+#headingDiv .btn-group li a {
+  color: white;
+}
+
+#headingDiv .btn-group li a:hover {
+  color: #222222;
+}
+
+#headingDiv .btn-group .dropdown-menu {
+  background-color: #222222;
+}
+
+#headingDiv .btn-group .dropdown-menu > .active > a,
+#headingDiv .btn-group .dropdown-menu > .active > a:hover,
+#headingDiv .btn-group .dropdown-menu > .active > a:focus {
+  background-color: #fec503;
+  color: white;
+}

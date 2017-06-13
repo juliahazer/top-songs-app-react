@@ -20,6 +20,8 @@ class App extends Component {
       itunesAPIUrl: ''
     };
     this.handleNavbarChange = this.handleNavbarChange.bind(this);
+    this.handleNumSongsChange = this.handleNumSongsChange.bind(this);
+    this.handleCountryChange = this.handleCountryChange.bind(this);
   }
 
   //life-cycle methods
@@ -29,8 +31,24 @@ class App extends Component {
 
   //event handlers
   handleNavbarChange(categoryName, genreNum){
-    this.setState({categoryName, genreNum});
-    this.newApisCall();
+    this.setState({categoryName, genreNum}, function(){    
+      this.newApisCall();
+    });
+  }
+
+  handleNumSongsChange(e){
+    var totalCount = Number(e.target.name);
+    this.setState({totalCount}, function(){
+      this.newApisCall();
+    })
+  }
+
+  handleCountryChange(e){
+    var countryCode = e.target.id;
+    var country = e.target.name
+    this.setState({countryCode, country}, function(){
+      this.newApisCall();
+    })
   }
 
   //custom helper methods
@@ -123,6 +141,40 @@ class App extends Component {
   }
 
   render() {
+    var numSongsMenuItems = this.props.numSongCategories.map((el) => {
+      var active = "";
+      if (el === this.state.totalCount){
+        active = " active";
+      }
+      return (
+        <MenuItem 
+          onClick={this.handleNumSongsChange}
+          key={el}
+          name={el}
+          className={"numSongs" + active}>
+            {el}
+        </MenuItem>
+      )
+    });
+
+    var countryMenuItems = this.props.countryCategories.map((el) => {
+      var active = "";
+      if (el.countryCode === this.state.countryCode){
+        active = " active";
+      }
+      return (
+        <MenuItem
+          onClick={this.handleCountryChange}
+          key={el.country}
+          name={el.country}
+          id={el.countryCode}
+          className={"countries" + active}
+        >
+            {el.country}
+        </MenuItem>
+      )
+    });
+
     return (
       <div className="App">
 
@@ -139,49 +191,26 @@ class App extends Component {
 
             <br />
 
-            {/*<DropdownButton bsStyle='default' title='Default' key='0' id={`dropdown-basic-0`}>
-              <MenuItem eventKey="1">Action</MenuItem>
-              <MenuItem eventKey="2">Another action</MenuItem>
-              <MenuItem eventKey="3" active>Active Item</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey="4">Separated link</MenuItem>
-            </DropdownButton>*/}
-
             {/* # of Songs Selection Button */}
             <div className="btn-group" id="numSongsBtn">
-              <button type="button" className="btnName btn btn-default"># of Songs</button>
-              <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span className="caret"></span>
-                <span className="sr-only">Toggle Dropdown</span>
-              </button>
-              <ul className="dropdown-menu">
-                <li className="active"><a className="numSongs" onClick="">5</a></li>
-                <li><a className="numSongs" onClick="">10</a></li>
-                <li><a className="numSongs" onClick="">15</a></li>
-                <li><a className="numSongs" onClick="">20</a></li>
-                <li><a className="numSongs" onClick="">25</a></li>
-              </ul>
+              <DropdownButton 
+                title="# of Songs"
+                key="numSongsDropdown" 
+                id="numSongsDropdown"
+                className="btnName btn btn-default">
+                  {numSongsMenuItems}
+              </DropdownButton>
             </div>
 
             {/* Country Selection Button */}
             <div className="btn-group" id="countriesBtn">
-              <button type="button" className="btnName btn btn-default">Country</button>
-              <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span className="caret"></span>
-                <span className="sr-only">Toggle Dropdown</span>
-              </button>
-              <ul className="dropdown-menu">
-                <li className="active"><a data-country="us" className="countries" onClick="">US</a></li>
-                <li><a data-country="au" className="countries" onClick="">Australia</a></li>
-                <li><a data-country="fr" className="countries" onClick="">France</a></li>
-                <li><a data-country="de" className="countries" onClick="">Germany</a></li>
-                <li><a data-country="gb" className="countries" onClick="">Great Britain</a></li>
-                <li><a data-country="id" className="countries" onClick="">Indonesia</a></li>
-                <li><a data-country="it" className="countries" onClick="">Italy</a></li>
-                <li><a data-country="lb" className="countries" onClick="">Lebanon</a></li>
-                <li><a data-country="mx" className="countries" onClick="">Mexico</a></li>
-                <li><a data-country="vn" className="countries" onClick="">Vietnam</a></li>
-              </ul>
+              <DropdownButton 
+                title="Country"
+                key="countryDropdown" 
+                id="countryDropdown"
+                className="btnName btn btn-default">
+                  {countryMenuItems}
+              </DropdownButton>
             </div>
           </div>
 
@@ -195,6 +224,21 @@ class App extends Component {
       </div>
     );
   }
+}
+
+App.defaultProps =  { 
+  numSongCategories: [5, 10, 15, 20, 25],
+  countryCategories: [
+      { country: 'US', countryCode: 'us'},
+      { country: 'Australia', countryCode: 'au'},
+      { country: 'France', countryCode: 'fr'},
+      { country: 'Germany', countryCode: 'de' },
+      { country: 'Great Britain', countryCode: 'gb'},
+      { country: 'Indonesia', countryCode: 'id'},
+      { country: 'Italy', countryCode: 'it'},
+      { country: 'Mexico', countryCode: 'mx' },
+      { country: 'Vietnam', countryCode: 'vn' }
+  ]
 }
 
 export default App;
