@@ -6,24 +6,26 @@
   color: white;
   padding-top: 14px;
   border-radius: 0px;
-  padding-bottom: 14px;
+  padding-bottom: 16px;
+  border: none;
+  outline: none;
 }
 
 .DropdownButton:hover,
+.btn-default:active:hover,
+.btn-default:active:focus,
 .DropdownButton:active,
 .DropdownButton:focus,
-.btn-default:active:hover, 
-.btn-default.active:hover, 
 .open > .dropdown-toggle.btn-default:hover, 
-.btn-default:active:focus, 
-.btn-default.active:focus, 
 .open > .dropdown-toggle.btn-default:focus, 
-.btn-default:active.focus, 
-.btn-default.active.focus, 
-.open > .dropdown-toggle.btn-default.focus  {
+.btn-default:active.focus,  
+.open > .dropdown-toggle.btn-default.focus,
+.btn-default:active, 
+.btn-default.active, 
+.open > .dropdown-toggle.btn-default {
+  color: #fec503;
   background-color: #222222;
   border: none;
-  color: #fed136;
   outline: none;
 }
 
@@ -31,13 +33,6 @@
   color: white;
   background-color: #fec503;
 }
-
-.btn-default:active, 
-.btn-default.active, 
-.open > .dropdown-toggle.btn-default {
-  background-color: #222222;
-} 
-
 
 /*Resource used for nav bar styling: Bootstrap theme: Agency
   https://github.com/BlackrockDigital/startbootstrap-agency/blob/master/css/agency.css
