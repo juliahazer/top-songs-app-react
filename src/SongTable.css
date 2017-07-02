@@ -1,0 +1,11 @@
+/************* SONG PLAYING INFO (yellow background) *************/
+#songPlaying {
+  font-style: italic;
+  font-size: 1.3em;
+  background-color: #fec503;
+  color: #222222;
+  padding: 5px;
+  padding-left: 8px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+}

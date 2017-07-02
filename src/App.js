@@ -197,7 +197,6 @@ class App extends Component {
 
     return (
       <div className="App">
-
         <Navbar key='0' clickAction={this.handleNavbarChange}/>
 
         <div className="container-fluid">
@@ -233,14 +232,9 @@ class App extends Component {
               </DropdownButton>
             </div>
           </div>
-
-          {/* Info about the song playing */}
-          <div id="songPlaying">
-          </div>
         </div>
 
         <SongTable songs={this.state.songs}/>
-
       </div>
     );
   }
