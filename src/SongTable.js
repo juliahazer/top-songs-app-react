@@ -26,8 +26,14 @@ class SongTable extends Component {
         activeSong: null,
         muted: false
       });
-    } else if (this.props.songs.length < nextProps.songs.length){
-      //DIFF ACTION FOR LENGTH`
+    } else if (this.props.songs.length > nextProps.songs.length){
+      let players = this.state.players.slice();
+      players = players.filter(player => {
+        return nextProps.songs.find(song => {
+          return song.videoId === player.a.id;
+        }) !== undefined;
+      });
+      this.setState({ players, activeSong: null, muted: false });
     }
   }
 
@@ -205,9 +211,12 @@ class SongTable extends Component {
           + `${this.state.activeSong.artist}`;
       }
     }
-    return (
-      <div>
-        <div id="playlistControls">
+
+    let playListControlsDiv;
+    //only show playListControls when all players are loaded
+    if (this.state.players.length === this.props.songs.length) {
+      playListControlsDiv = (
+       <div id="playlistControls">
           <a id="prevSong" className="resume btn btn-default btn-sm" role="button" href="" onClick={e => this.handlePlayNextControl(e, false)}>
             <span className="glyphicon glyphicon-backward" aria-hidden="true"></span>
           </a>
@@ -221,6 +230,12 @@ class SongTable extends Component {
             <span className="glyphicon glyphicon-forward" aria-hidden="true"></span>
           </a>
         </div>
+      );
+    }
+
+    return (
+      <div>
+       {playListControlsDiv}
 
         <div id="songPlaying">
           {muteTxt}

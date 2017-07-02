@@ -15,7 +15,7 @@ class App extends Component {
       country: 'US',
       categoryName: 'ALL',
       genreNum: 0,
-      totalCount: 2,
+      totalCount: 5,
       songs: [],
       itunesAPIUrl: ''
     };
@@ -199,7 +199,29 @@ class App extends Component {
       <div className="App">
         <Navbar key='0' clickAction={this.handleNavbarChange}/>
 
-        <div className="container-fluid">
+        <div id="dropdownButtonsDiv" className="container-fluid">
+          {/* # of Songs Selection Button */}
+          <div className="btn-group" id="numSongsBtn">
+            <DropdownButton
+              title="# of Songs"
+              key="numSongsDropdown"
+              id="numSongsDropdown"
+              className="btnName btn btn-default">
+                {numSongsMenuItems}
+            </DropdownButton>
+          </div>
+
+          {/* Country Selection Button */}
+          <div className="btn-group" id="countriesBtn">
+            <DropdownButton
+              title="Country"
+              key="countryDropdown"
+              id="countryDropdown"
+              className="btnName btn btn-default">
+                {countryMenuItems}
+            </DropdownButton>
+          </div>
+
           <div id="headingDiv">
             <h2 className="section-heading" id="categoryHeading">
               {this.state.categoryName}
@@ -210,27 +232,6 @@ class App extends Component {
 
             <br />
 
-            {/* # of Songs Selection Button */}
-            <div className="btn-group" id="numSongsBtn">
-              <DropdownButton
-                title="# of Songs"
-                key="numSongsDropdown"
-                id="numSongsDropdown"
-                className="btnName btn btn-default">
-                  {numSongsMenuItems}
-              </DropdownButton>
-            </div>
-
-            {/* Country Selection Button */}
-            <div className="btn-group" id="countriesBtn">
-              <DropdownButton
-                title="Country"
-                key="countryDropdown"
-                id="countryDropdown"
-                className="btnName btn btn-default">
-                  {countryMenuItems}
-              </DropdownButton>
-            </div>
           </div>
         </div>
 

@@ -3,8 +3,8 @@ body {
 }
 
 /************* HEADER *************/
-#headingDiv {
-  margin-top: 70px;
+#dropdownButtonsDiv {
+  margin-top: 60px;
 }
 
 #headingDiv .section-heading{
@@ -24,41 +24,46 @@ body {
 }
 
 /************* # OF SONGS/COUNTRIES BTNS *************/
-#headingDiv div#numSongsBtn,
-#headingDiv div#countriesBtn {
+#dropdownButtonsDiv div#numSongsBtn,
+#dropdownButtonsDiv div#countriesBtn {
   padding-right: 5px;
   margin-bottom: 8px;
 }
 
-#headingDiv button.btnName,
-#headingDiv button.btnName:focus,
-#headingDiv button.btnName:hover {
+#dropdownButtonsDiv button.btnName,
+#dropdownButtonsDiv button.btnName:focus,
+#dropdownButtonsDiv button.btnName:hover {
   background-color: #222222;
   color: white;
 }
 
-#headingDiv button.dropdown-toggle:hover,
-#headingDiv button.dropdown-toggle:focus,
-#headingDiv button.dropdown-toggle:active{
+#dropdownButtonsDiv button.dropdown-toggle:hover,
+#dropdownButtonsDiv button.dropdown-toggle:focus,
+#dropdownButtonsDiv button.dropdown-toggle:active{
   background-color: #222222;
 }
 
-#headingDiv .btn-group li a {
+#dropdownButtonsDiv .btn-group li a {
   color: white;
 }
 
-#headingDiv .btn-group li a:hover {
+#dropdownButtonsDiv .btn-group li a:hover {
   color: #222222;
 }
 
-#headingDiv .btn-group .dropdown-menu {
+#dropdownButtonsDiv .btn-group .dropdown-menu {
   background-color: #222222;
 }
 
-#headingDiv .btn-group .dropdown-menu > .active > a,
-#headingDiv .btn-group .dropdown-menu > .active > a:hover,
-#headingDiv .btn-group .dropdown-menu > .active > a:focus {
+#dropdownButtonsDiv .btn-group .dropdown-menu > .active > a,
+#dropdownButtonsDiv .btn-group .dropdown-menu > .active > a:hover,
+#dropdownButtonsDiv .btn-group .dropdown-menu > .active > a:focus {
   background-color: #fec503;
   color: white;
+}
+
+#dropdownButtonsDiv div#numSongsBtn,
+#dropdownButtonsDiv div#countriesBtn {
+  margin-bottom: 0;
 }
 
