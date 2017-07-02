@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
+import {
+  Navbar as NavbarBS,
+  Nav,
+  NavItem,
+  NavDropdown,
+  MenuItem
+} from 'react-bootstrap';
 import './Navbar.css';
 
 class Navbar extends Component {
@@ -17,8 +23,12 @@ class Navbar extends Component {
     e.preventDefault();
     let activeName = e.target.name;
     let activeGenre = +(e.target.attributes.getNamedItem('data').value);
-    let activeSubcategory = e.target.className === 'category' ? false :
-      true;
+    let activeSubcategory = false;
+    this.props.subCategories.forEach(subCategory => {
+      if (subCategory.genre === activeGenre) {
+        activeSubcategory = true;
+      }
+    })
     this.setState({activeName, activeGenre, activeSubcategory}, () => {
       this.props.clickAction(this.state.activeName, this.state.activeGenre);
     });
@@ -28,24 +38,20 @@ class Navbar extends Component {
     let mapCategories = cat => {
       let name = cat.name.toLowerCase();
       let active = "";
-      let classTxt = cat.mainCategory ?
-        'category' :
-        'subcategory';
       if (this.state.activeGenre === cat.genre) {
         active = "active";
       }
       if (cat.mainCategory) {
         return (
-          <li className={active} key={name}>
-            <a
-              onClick={this.handleClick}
-              name={name}
-              href=""
-              className={classTxt}
-              data={cat.genre}>
-              {cat.name}
-            </a>
-          </li>
+          <NavItem
+            onClick={this.handleClick}
+            name={name}
+            key={cat.name}
+            href=""
+            className={active + " NavItem category"}
+            data={cat.genre}>
+            {cat.name}
+          </NavItem>
         );
       } else {
         return (
@@ -54,13 +60,13 @@ class Navbar extends Component {
             key={name}
             name={name}
             href=""
-            className={classTxt}
             data={cat.genre}>
             {cat.name}
           </MenuItem>
         );
       }
     }
+
     let categories = this.props.mainCategories.map(mapCategories);
     let subcategories = this.props.subCategories.map(mapCategories);
     let dropdownClass = '';
@@ -69,37 +75,35 @@ class Navbar extends Component {
     }
 
     return (
-      <nav className="navbar navbar-custom navbar-inverse navbar-fixed-top">
-        <div className="container-fluid">
-          {/* Nav Bar: toggle for mobile, Brand, Playlist controls */}
-          <div className="navbar-header">
-            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            <div id="brandTitle">
-              <a className="navbar-brand" onClick="">Top Songs</a>
-            </div>
-          </div> {/*  /.navbar-header */}
+      <div>
+      <NavbarBS className="NavbarBS" inverse fixedTop>
+        <NavbarBS.Header>
+          <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span className="sr-only">Toggle navigation</span>
+            <span className="icon-bar"></span>
+            <span className="icon-bar"></span>
+            <span className="icon-bar"></span>
+          </button>
+          <NavbarBS.Brand>
+            <a className="navbarBrand" onClick="">Top Songs</a>
+          </NavbarBS.Brand>
+        </NavbarBS.Header>
 
-          {/* Navbar links and Other dropdown */}
-          <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul className="nav navbar-nav">
-              {categories}
+        <NavbarBS.Collapse id="bs-example-navbar-collapse-1">
+          <Nav>
+            {categories}
 
-              <DropdownButton
-                title='Other'
-                key='Other'
-                id='dropdown-basic-other'
-                className={`DropdownButton ${dropdownClass}`}>
-                {subcategories}
-              </DropdownButton>
-            </ul>
-          </div>{/*  /.navbar-collapse */}
-        </div>{/*  /.container-fluid */}
-      </nav>
+            <NavDropdown
+              title='Other'
+              key='Other'
+              id='dropdown-basic-other'
+              className={"NavDropdown " + dropdownClass + " subcategory"}>
+              {subcategories}
+            </NavDropdown>
+          </Nav>
+        </NavbarBS.Collapse>
+      </NavbarBS>
+      </div>
     )
   }
 }

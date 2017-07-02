@@ -15,7 +15,7 @@ class App extends Component {
       country: 'US',
       categoryName: 'ALL',
       genreNum: 0,
-      totalCount: 5,
+      totalCount: 2,
       songs: [],
       itunesAPIUrl: ''
     };

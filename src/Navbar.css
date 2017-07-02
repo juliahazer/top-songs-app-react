@@ -2,13 +2,13 @@
 /*Resource used for nav bar styling: Bootstrap theme: Agency
   https://github.com/BlackrockDigital/startbootstrap-agency/blob/master/css/agency.css
 */
-.navbar-custom {
+.NavbarBS {
   background-color: #222222;
   border-color: transparent;
 }
 
 /*hamburger menu on smaller screens*/
-.navbar-custom .navbar-toggle {
+.NavbarBS .navbar-toggle {
   background-color: #fed136;
   border-color: #fed136;
   text-transform: uppercase;
@@ -16,39 +16,39 @@
   font-size: 12px;
 }
 
-.navbar-custom .navbar-toggle:hover,
-.navbar-custom .navbar-toggle:focus {
+.NavbarBS .navbar-toggle:hover,
+.NavbarBS .navbar-toggle:focus {
   background-color: #fed136;
 }
 
 /*"Top Songs" brand*/
-.navbar-custom .navbar-brand {
+.NavbarBS .navbarBrand {
   font-size: 2em;
   text-transform: uppercase;
   padding-right: 30px;
   color: #fed136;
 }
 
-.navbar-custom .navbar-brand:hover,
-.navbar-custom .navbar-brand:focus,
-.navbar-custom .navbar-brand:active,
-.navbar-custom .navbar-brand.active {
+.NavbarBS .navbarBrand:hover,
+.NavbarBS .navbarBrand:focus,
+.NavbarBS .navbarBrand:active,
+.NavbarBS .navbarBrand.active {
   color: #fec503;
 }
 
-.navbar-custom #brandTitle {
+.NavbarBS #brandTitle {
   display: block;
 }
 
 /*Playlist controls*/
-.navbar-custom #playlistControls {
+.NavbarBS #playlistControls {
   display: block;
   padding-top: 10px;
   padding-bottom: 5px;
 }
 
-.navbar-custom #playlistControls a,
-.navbar-custom #playlistControls a:focus {
+.NavbarBS #playlistControls a,
+.NavbarBS #playlistControls a:focus {
   background-color: #f2c503;
   color: black;
   outline: none;
@@ -58,71 +58,59 @@
   border: none;
 }
 
-.navbar-custom #playlistControls a:hover,
-.navbar-custom #playlistControls a:active {
+.NavbarBS #playlistControls a:hover,
+.NavbarBS #playlistControls a:active {
   background-color: #222222;
   color: #f2c503;
 }
 
 /*Nav bar links*/
-.navbar-custom .nav li a {
+.NavbarBS li a {
   text-transform: uppercase;
   font-weight: 400;
   letter-spacing: 1px;
-  color: white;
+  color: white !important;
 }
 
-.navbar-custom .nav li a:hover {
-  color: #fed136;
+.NavbarBS li a:hover {
+  color: #fed136 !important;
   outline: none;
 }
 
-.navbar-custom .nav li a:focus {
-  color: #222222;
+.NavbarBS li a:focus {
+  color: #222222 !important;
   outline: none;
 }
 
 /*Currently selected/active nav bar links*/
-.navbar-custom .navbar-nav > .active > a {
+.NavItem.active > a {
   border-radius: 0;
-  color: white;
-  background-color: #fed136;
+  color: white !important;
+  background-color: #fed136 !important;
 }
 
-.navbar-custom .navbar-nav > .active > a:hover,
-.navbar-custom .navbar-nav > .active > a:focus {
-  color: white;
-  background-color: #fec503;
+.NavItem.active > a:hover,
+.NavItem.active > a:focus {
+  color: white !important;
+  background-color: #fec503 !important;
 }
 
 /*Other dropdown menu styling */
-.navbar-custom .dropdown-menu {
+.NavbarBS .dropdown-menu {
   background-color: #222222;
 }
 
-.DropdownButton {
-  background-color: #222222;
-  border-color: transparent;
-  text-transform: uppercase;
-  color: white;
-  padding-top: 14px;
-  border-radius: 0px;
-  padding-bottom: 16px;
-  border: none;
-  outline: none;
-}
-
-.DropdownButton:hover,
+.NavDropdown:hover,
 .btn-default:active:hover,
 .btn-default:active:focus,
-.DropdownButton:active,
-.DropdownButton:focus,
-.open > .dropdown-toggle.btn-default:hover, 
-.open > .dropdown-toggle.btn-default:focus, 
-.btn-default:active.focus,  
+.NavDropdown:active,
+.NavDropdown:focus,
+.open > .dropdown-toggle.btn-default:hover,
+.open > .dropdown-toggle.btn-default:focus,
+.btn-default:active.focus,
 .open > .dropdown-toggle.btn-default.focus,
-.btn-default:active, 
-.btn-default.active, 
+.btn-default:active,
+.btn-default.active,
 .open > .dropdown-toggle.btn-default {
   color: #fec503;
   background-color: #222222;
@@ -130,7 +118,16 @@
   outline: none;
 }
 
-.DropdownButton.activeDropdown {
+#dropdown-basic-other {
+  color: white !important;
+}
+
+#dropdown-basic-other:hover {
+  color: #fec503 !important;
+}
+
+
+.NavDropdown.activeDropdown {
   color: white;
   background-color: #fec503;
 }
