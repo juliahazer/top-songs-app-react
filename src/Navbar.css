@@ -7,6 +7,10 @@
   border-color: transparent;
 }
 
+.NavbarBS > .container {
+  margin-left: 0px;
+}
+
 /*hamburger menu on smaller screens*/
 .NavbarBS .navbar-toggle {
   background-color: #fed136;
