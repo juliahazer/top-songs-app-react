@@ -2,7 +2,11 @@ import React from 'react';
 import YouTubePlayer from './YouTubePlayer';
 import './Song.css';
 
-const Song = ({position, name, artist, bioUrl, nameBio, videoId}) => (
+const Song = ({
+  position, name, artist, bioUrl,
+  nameBio, videoId, handleVideoOnReady,
+  handleVideoStateChange
+}) => (
   <tr id={`pos ${position}`} className="songRow text-left">
     <td>
       <span className="position">{position}</span>
@@ -27,7 +31,10 @@ const Song = ({position, name, artist, bioUrl, nameBio, videoId}) => (
       <YouTubePlayer
         key={`player ${position}`}
         id={`player ${position}`}
-        videoId = {videoId}/>
+        videoId = {videoId}
+        handleVideoOnReady = {handleVideoOnReady}
+        handleVideoStateChange = {handleVideoStateChange}
+      />
     </td>
   </tr>
 )

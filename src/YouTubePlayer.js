@@ -1,15 +1,21 @@
 import React from 'react'
 import YouTube from 'react-youtube'
 
-const YouTubePlayer = ({videoId}) => {
+const YouTubePlayer = ({
+  videoId, handleVideoOnReady, handleVideoStateChange
+}) => {
   const opts = {
     height: '300',
     width: '500'
   }
+
   return (
     <YouTube
       videoId={videoId}
-      opts={opts} />
+      opts={opts}
+      onReady={handleVideoOnReady}
+      onStateChange={handleVideoStateChange}
+    />
   )
 }
 
