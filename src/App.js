@@ -234,7 +234,10 @@ class App extends Component {
           </div>
         </div>
 
-        <SongTable songs={this.state.songs}/>
+        <SongTable
+          songs={this.state.songs}
+          category={this.state.categoryName}
+        />
       </div>
     );
   }

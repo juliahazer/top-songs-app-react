@@ -12,6 +12,7 @@ const YouTubePlayer = ({
   return (
     <YouTube
       videoId={videoId}
+      id={videoId}
       opts={opts}
       onReady={handleVideoOnReady}
       onStateChange={handleVideoStateChange}

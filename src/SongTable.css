@@ -9,3 +9,29 @@
   margin-bottom: 5px;
   border-radius: 3px;
 }
+
+#songPlaying .playPauseGlyph {
+  position: relative;
+  top: 3px;
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+/************* PLAYLIST CONTROLS *************/
+#playlistControls a,
+#playlistControls a:focus {
+  background-color: #f2c503;
+  color: black;
+  outline: none;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+  border: none;
+  margin: 0 3px 5px 3px;
+}
+
+#playlistControls a:hover,
+#playlistControls a:active {
+  background-color: #222222;
+  color: #f2c503;
+}
