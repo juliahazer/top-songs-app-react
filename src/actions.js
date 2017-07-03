@@ -2,20 +2,22 @@ import $ from 'jquery';
 
 export const SET_SONGS = 'SET_SONGS';
 export const NAV_CHANGE = 'NAV_CHANGE';
+export const NUM_SONGS_CHANGE = 'NUM_SONGS_CHANGE';
+export const COUNTRY_CODE_CHANGE = 'COUNTRY_CODE_CHANGE';
 
 export const MAIN_NAV_ORDER = [0, 14, 21, 6, 12];
 export const SUB_NAV_ORDER = [20, 5, 11, 19];
 
 export const GENRE_NUM_LOOKUP = {
-  0: "All",
-  14: "Pop",
-  21: "Rock",
-  6: "Country",
-  12: "Latino",
-  20: "Alternative",
-  5: "Classical",
-  11: "Jazz",
-  19: "World",
+  0: 'All',
+  14: 'Pop',
+  21: 'Rock',
+  6: 'Country',
+  12: 'Latino',
+  20: 'Alternative',
+  5: 'Classical',
+  11: 'Jazz',
+  19: 'World',
 };
 
 export const COUNTRY_CODE_LOOKUP = {
@@ -30,9 +32,9 @@ export const COUNTRY_CODE_LOOKUP = {
   'vn': 'Vietnam'
 }
 
-const setItunesAPIUrl = (countryCode, totalCount, genreNum) => {
+const setItunesAPIUrl = (countryCode, totalNumSongs, genreNum) => {
   let itunesAPIUrl = `https://itunes.apple.com/${countryCode}`
-    + `/rss/topsongs/limit=${totalCount}/`;
+    + `/rss/topsongs/limit=${totalNumSongs}/`;
   if (genreNum !== 0) {
     itunesAPIUrl += `genre=${genreNum}/`;
   }
@@ -81,16 +83,19 @@ const createSongObject = (song, index) => {
 export function newApisCall ({
   genreNum = null,
   countryCode = null,
-  totalCount = null,
+  totalNumSongs = null,
   numCountDiff = 0
 } = {}) {
   return function (dispatch, getState) {
     genreNum = genreNum !== null ? genreNum : getState().genreNum;
     countryCode = countryCode || getState().countryCode;
-    totalCount = totalCount || getState().totalCount;
+    if (totalNumSongs !== null) {
+      numCountDiff = totalNumSongs - getState().totalNumSongs;
+    }
+    totalNumSongs = totalNumSongs || getState().totalNumSongs;
     let itunesAPIUrl = setItunesAPIUrl(
       countryCode,
-      totalCount,
+      totalNumSongs,
       genreNum
     );
     /*itunes api call, then w/ results,
@@ -105,7 +110,7 @@ export function newApisCall ({
       let songsCurrHaveLength = 0;
       //limit api calls to new songs
       if (numCountDiff > 0) {
-        songsCurrHaveLength = songs.length;
+        songsCurrHaveLength = totalNumSongs - numCountDiff;
         songs = data.feed.entry.slice(songsCurrHaveLength);
       }
       let newSongsArr = songs.map((song, index) => {
@@ -117,7 +122,7 @@ export function newApisCall ({
       to each song object*/
       newSongsArr.forEach(song => {
         let youtubeAPIUrl = setYouTubeAPIUrl(song);
-        let songsState = songs.slice();
+        let songsState = getState().songs.slice();
         $.ajax({
           method: "GET",
           url: youtubeAPIUrl,
@@ -130,7 +135,7 @@ export function newApisCall ({
             + `?enablejsapi=1`;
           /*ensure that youtube info for all videos
           is retrieved, then display html of all results*/
-          if (count === getState().totalCount) {
+          if (count === totalNumSongs) {
             let finalSongs;
             if (numCountDiff > 0) {
               finalSongs = songsState.concat(newSongsArr);
@@ -141,6 +146,12 @@ export function newApisCall ({
             if (genreNum !== null) {
               dispatch(navChange(genreNum));
             }
+            if (totalNumSongs !== null) {
+              dispatch(numSongsChange(totalNumSongs));
+            }
+            if (countryCode !== null) {
+              dispatch(countryCodeChange(countryCode));
+            }
           }
         });
       });
@@ -148,33 +159,18 @@ export function newApisCall ({
   }
 }
 
-export function setSongs (songs) {
+function setSongs (songs) {
   return { type: SET_SONGS, payload: {songs}};
 }
 
-export function navChange (genreNum){
+function navChange (genreNum) {
   return { type: NAV_CHANGE, payload: {genreNum}};
 }
 
-export function handleNumSongsChange (e) {
-  let totalCount = +(e.target.name);
-  let numCountDiff = totalCount - this.state.totalCount;
-  //if reducing the number of songs no api call needed
-  if (numCountDiff < 0) {
-    let songs = this.state.songs.slice();
-    songs = songs.slice(0, songs.length + numCountDiff);
-    this.setState({totalCount, songs});
-  } else {
-    this.setState({totalCount},
-      () => newApisCall(numCountDiff));
-  }
+function numSongsChange (totalNumSongs) {
+  return { type: NUM_SONGS_CHANGE, payload: {totalNumSongs}};
 }
 
-export function handleCountryChange (e) {
-  let countryCode = e.target.id;
-  let country = e.target.name
-  this.setState({countryCode, country}, () => newApisCall());
+function countryCodeChange (countryCode) {
+  return { type: COUNTRY_CODE_CHANGE, payload: {countryCode}};
 }
-
-
-

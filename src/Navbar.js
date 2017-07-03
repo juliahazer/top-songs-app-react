@@ -9,7 +9,6 @@ import {
 import { connect } from 'react-redux';
 import {
   newApisCall,
-  navChange, //NEED TO REMOVE
   GENRE_NUM_LOOKUP,
   MAIN_NAV_ORDER,
   SUB_NAV_ORDER
@@ -61,7 +60,7 @@ class Navbar extends Component {
           <NavbarBS.Toggle />
         </NavbarBS.Header>
 
-        <NavbarBS.Collapse id="bs-example-navbar-collapse-1">
+        <NavbarBS.Collapse>
           <Nav>
             {categories}
 
@@ -86,9 +85,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 };
 
-const mapDispatchToProps = {
-  newApisCall,
-  navChange
-};
+const mapDispatchToProps = { newApisCall };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

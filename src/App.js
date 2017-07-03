@@ -7,8 +7,6 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
   newApisCall,
-  handleNumSongsChange,
-  handleCountryChange,
   GENRE_NUM_LOOKUP,
   COUNTRY_CODE_LOOKUP
 } from './actions';
@@ -16,21 +14,21 @@ import {
 class App extends Component {
 
   componentWillMount = () => {
-    this.props.newApisCall();
+    this.props.newApisCall({totalNumSongs: this.props.totalNumSongs});
   }
 
   render() {
     let categoryName = GENRE_NUM_LOOKUP[this.props.genreNum];
-    let numSongsMenuItems = this.props.numSongCategories.map(numSongs => {
-      let active = numSongs === this.props.totalCount ?
+    let countryName = COUNTRY_CODE_LOOKUP[this.props.countryCode];
+    let numSongsMenuItems = this.props.numSongCategories.map(totalNumSongs => {
+      let active = totalNumSongs === this.props.totalNumSongs ?
         " active" : "";
       return (
         <MenuItem
-          onClick={this.props.handleNumSongsChange}
-          key={numSongs}
-          name={numSongs}
+          onClick={() => this.props.newApisCall({totalNumSongs})}
+          key={totalNumSongs}
           className={`numSongs ${active}`}>
-            {numSongs}
+            {totalNumSongs}
         </MenuItem>
       );
     });
@@ -41,7 +39,7 @@ class App extends Component {
         " active": "";
       return (
         <MenuItem
-          onClick={this.props.handleCountryChange}
+          onClick={() => this.props.newApisCall({countryCode})}
           key={country}
           name={country}
           id={countryCode}
@@ -84,7 +82,7 @@ class App extends Component {
               {categoryName}
             </h2>
             <h3 className="section-subheading" id="categorySubheading">
-              Top {this.props.totalCount} Songs - {this.props.country}
+              Top {this.props.totalNumSongs} Songs - {countryName}
             </h3>
 
             <br />
@@ -110,17 +108,12 @@ App.defaultProps =  {
 const mapStateToProps = (state, ownProps) => {
   return {
     countryCode: state.countryCode,
-    country: state.country,
     genreNum: state.genreNum,
-    totalCount: state.totalCount,
+    totalNumSongs: state.totalNumSongs,
     songs: state.songs
   }
 };
 
-const mapDispatchToProps = {
-  newApisCall,
-  handleNumSongsChange,
-  handleCountryChange
-};
+const mapDispatchToProps = { newApisCall };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
