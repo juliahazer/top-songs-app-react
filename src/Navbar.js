@@ -6,73 +6,50 @@ import {
   NavDropdown,
   MenuItem
 } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import {
+  newApisCall,
+  navChange, //NEED TO REMOVE
+  GENRE_NUM_LOOKUP,
+  MAIN_NAV_ORDER,
+  SUB_NAV_ORDER
+} from './actions';
 import './Navbar.css';
 
 class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeName: 'All',
-      activeGenre: 0,
-      activeSubcategory: false
-    }
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick = (e) => {
-    e.preventDefault();
-    let activeName = e.target.name;
-    let activeGenre = +(e.target.attributes.getNamedItem('data').value);
-    let activeSubcategory = false;
-    this.props.subCategories.forEach(subCategory => {
-      if (subCategory.genre === activeGenre) {
-        activeSubcategory = true;
-      }
-    })
-    this.setState({activeName, activeGenre, activeSubcategory}, () => {
-      this.props.clickAction(this.state.activeName, this.state.activeGenre);
-    });
-  }
 
   render() {
-    let mapCategories = cat => {
-      let name = cat.name.toLowerCase();
-      let active = "";
-      if (this.state.activeGenre === cat.genre) {
-        active = "active";
-      }
-      if (cat.mainCategory) {
-        return (
-          <NavItem
-            onClick={this.handleClick}
-            name={name}
-            key={cat.name}
-            href=""
-            className={active + " NavItem category"}
-            data={cat.genre}>
-            {cat.name}
-          </NavItem>
-        );
-      } else {
-        return (
-          <MenuItem
-            onClick={this.handleClick}
-            key={name}
-            name={name}
-            href=""
-            data={cat.genre}>
-            {cat.name}
-          </MenuItem>
-        );
-      }
-    }
+    let categories = MAIN_NAV_ORDER.map(genreNum => {
+      let name = GENRE_NUM_LOOKUP[genreNum];
+      let active = this.props.genreNum === genreNum ? "active" : "";
+      return (
+        <NavItem
+          onClick={() => this.props.newApisCall({genreNum})}
+          key={name}
+          href=""
+          className={active + " NavItem category"}
+        >
+          {name}
+        </NavItem>
+      );
+    })
 
-    let categories = this.props.mainCategories.map(mapCategories);
-    let subcategories = this.props.subCategories.map(mapCategories);
-    let dropdownClass = '';
-    if (this.state.activeSubcategory) {
-      dropdownClass = " activeDropdown"
-    }
+    let subcategories = SUB_NAV_ORDER.map(genreNum => {
+      let name = GENRE_NUM_LOOKUP[genreNum];
+      let active = this.props.genreNum === genreNum ? "active" : "";
+      return (
+        <MenuItem
+          onClick={() => this.props.newApisCall({genreNum})}
+          key={name}
+          href=""
+        >
+          {name}
+        </MenuItem>
+      );
+    })
+
+    let activeSubcategory = SUB_NAV_ORDER.includes(this.props.genreNum);
+    let dropdownClass = activeSubcategory ? " activeDropdown" : "";
 
     return (
       <div>
@@ -92,7 +69,7 @@ class Navbar extends Component {
               title='Other'
               key='Other'
               id='dropdown-basic-other'
-              className={"NavDropdown " + dropdownClass + " subcategory"}>
+              className={"NavDropdown subcategory" + dropdownClass}>
               {subcategories}
             </NavDropdown>
           </Nav>
@@ -103,20 +80,15 @@ class Navbar extends Component {
   }
 }
 
-Navbar.defaultProps =  {
-  mainCategories: [
-      { name: 'All', genre: 0, mainCategory: true },
-      { name: 'Pop', genre: 14, mainCategory: true },
-      { name: 'Rock', genre: 21, mainCategory: true },
-      { name: 'Country', genre: 6, mainCategory: true },
-      { name: 'Latino', genre: 12, mainCategory: true },
-    ],
-  subCategories: [
-      { name: 'Alternative', genre: 20, mainCategory: false },
-      { name: 'Classical', genre: 5, mainCategory: false },
-      { name: 'Jazz', genre: 11, mainCategory: false },
-      { name: 'World', genre: 19, mainCategory: false }
-  ]
-}
+const mapStateToProps = (state, ownProps) => {
+  return {
+    genreNum: state.genreNum
+  }
+};
 
-export default Navbar;
+const mapDispatchToProps = {
+  newApisCall,
+  navChange
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
