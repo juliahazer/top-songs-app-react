@@ -90,10 +90,7 @@ class App extends Component {
           </div>
         </div>
 
-        <SongTable
-          songs={this.props.songs}
-          category={categoryName}
-        />
+        <SongTable />
       </div>
     );
   }

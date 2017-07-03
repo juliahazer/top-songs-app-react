@@ -1,109 +1,34 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import './SongTable.css';
 import Song from './Song';
+import SongPlayingInfo from './SongPlayingInfo';
 
 class SongTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      players: [],
-      activeSong: null,
-      muted: false,
-      playing: false
-    };
-    this.handleVideoOnReady = this.handleVideoOnReady.bind(this);
-    this.handleVideoStateChange = this.handleVideoStateChange.bind(this);
     this.handlePlayNextControl = this.handlePlayNextControl.bind(this);
     this.handlePlayPauseControl = this.handlePlayPauseControl.bind(this);
     this.handleMuteControl = this.handleMuteControl.bind(this);
     this.ifFirstPlay = this.ifFirstPlay.bind(this);
-    this.playNextVideo = this.playNextVideo.bind(this);
   }
 
   componentWillReceiveProps = nextProps => {
-    if (this.props.categoryName !== nextProps.categoryName) {
-      this.setState({
-        activeSong: null,
-        muted: false
-      });
-    } else if (this.props.songs.length > nextProps.songs.length){
-      let players = this.state.players.slice();
-      players = players.filter(player => {
-        return nextProps.songs.find(song => {
-          return song.videoId === player.a.id;
-        }) !== undefined;
-      });
-      this.setState({ players, activeSong: null, muted: false });
-    }
-  }
-
-  handleVideoOnReady = e => {
-    let players = this.state.players.slice();
-    players.push(e.target);
-    this.setState({ players });
-  }
-
-  handleVideoStateChange = e => {
-    let players = this.state.players.slice();
-    let targetId = e.target.a.id;
-    let activeSong = Object.assign({}, this.state.activeSong);
-    let playing = this.state.playing;
-    //if paused & active song, update active song info with 'paused'
-    if (e.data === 2){
-      if (activeSong.videoId === targetId){
-        playing = false;
-      }
-    }
-
-    //if playing, pause all other videos
-    if (e.data === 1) {
-      players.forEach(player => {
-        if (player.a.id !== targetId) {
-          player.pauseVideo();
-        }
-      })
-      activeSong = this.props.songs.find(song => {
-        return song.videoId === targetId
-      });
-      playing = true;
-    }
-    //if ended, refresh video to unstarted state
-    //and play next video on the list
-    if (e.data === 0) {
-      players.forEach(player => {
-        if (player.a.id === targetId) {
-          player.stopVideo(-1);
-        }
-      })
-      this.playNextVideo(players, activeSong, targetId);
-      playing = true;
-    }
-    this.setState({players, activeSong, playing});
-  }
-
-  playNextVideo = (players, activeSong, targetId, nextBoolean=true) => {
-    let positionNext = this.props.songs.find(song => {
-        return song.videoId === targetId
-      }).position;
-    nextBoolean ? positionNext += 1 : positionNext -= 1;
-    //if at end of list, play first video
-    if (positionNext > this.props.songs.length){
-      positionNext = 1;
-    } else if (positionNext === 0) {
-      positionNext = this.props.songs.length;
-    }
-    let videoIdNext = this.props.songs.find(song => {
-      return song.position === positionNext;
-    }).videoId;
-    players.forEach(player => {
-      if (player.a.id === videoIdNext) {
-        player.playVideo();
-        if (this.state.muted){
-          player.mute();
-        }
-      }
-    });
-    activeSong = this.props.songs[positionNext-1];
+    // if (this.props.categoryName !== nextProps.categoryName) {
+    //   this.setState({
+    //     activeSong: null,
+    //     muted: false
+    //   });
+    //DO I NEED TO DO SOMETHING HERE??????
+    // } else if (this.props.songs.length > nextProps.songs.length){
+    //   let players = this.state.players.slice();
+    //   players = players.filter(player => {
+    //     return nextProps.songs.find(song => {
+    //       return song.videoId === player.a.id;
+    //     }) !== undefined;
+    //   });
+    //   this.setState({ players, activeSong: null, muted: false });
+    // }
   }
 
   handlePlayNextControl = (e, nextBoolean) => {
@@ -117,7 +42,7 @@ class SongTable extends Component {
   }
 
   ifFirstPlay = nextBoolean => {
-    if (this.state.activeSong === null) {
+    if (this.props.activeSong === null) {
       let idx = nextBoolean ? 0 : this.props.songs.length-1;
       let activeSong = Object.assign({}, this.props.songs[idx]);
       let players = this.state.players.slice();
@@ -186,35 +111,13 @@ class SongTable extends Component {
         />
       )
     });
-    let playPauseControlGlyph = "glyphicon-pause";
-    let muteControlGlyph = this.state.muted ?
+    let playPauseControlGlyph = this.props.isPlaying ? "glyphicon-play" : "glyphicon-pause";
+    let muteControlGlyph = this.props.isMuted ?
       "glyphicon-volume-off " : "glyphicon-volume-up";
-    let muteTxt = this.state.muted ? "MUTED " : "";
-    let activeSongTxtState,
-      activeSongGlyphSpan,
-      activeSongTxtName,
-      glyphClass;
-    if (this.state.activeSong) {
-      if (this.state.activeSong.position !== undefined){
-        if (this.state.playing) {
-          activeSongTxtState = "Playing";
-          glyphClass = "glyphicon-play-circle";
-          playPauseControlGlyph = "glyphicon-play";
-        } else {
-          activeSongTxtState = "Paused";
-          glyphClass = "glyphicon-remove-circle";
-          playPauseControlGlyph = "glyphicon-pause";
-        }
-        activeSongGlyphSpan = <span className={`playPauseGlyph glyphicon ${glyphClass}`} aria-hidden="true"></span>;
-        activeSongTxtName = `#${this.state.activeSong.position}: `
-          + `${this.state.activeSong.songName} by `
-          + `${this.state.activeSong.artist}`;
-      }
-    }
 
     let playListControlsDiv;
     //only show playListControls when all players are loaded
-    if (this.state.players.length === this.props.songs.length) {
+    if (this.props.players.length === this.props.songs.length) {
       playListControlsDiv = (
        <div id="playlistControls">
           <a id="prevSong" className="resume btn btn-default btn-sm" role="button" href="" onClick={e => this.handlePlayNextControl(e, false)}>
@@ -237,12 +140,8 @@ class SongTable extends Component {
       <div>
        {playListControlsDiv}
 
-        <div id="songPlaying">
-          {muteTxt}
-          {activeSongTxtState}
-          {activeSongGlyphSpan}
-          {activeSongTxtName}
-        </div>
+        <SongPlayingInfo />
+
         <table className="table table-striped table-hover table-responsive table-sm">
           <thead>
             <tr>
@@ -260,4 +159,14 @@ class SongTable extends Component {
   }
 }
 
-export default SongTable;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    songs: state.songs,
+    activeSong: state.activeSong,
+    isPlaying: state.isPlaying,
+    isMuted: state.isMuted,
+    players: state.players
+  }
+};
+
+export default connect(mapStateToProps)(SongTable);

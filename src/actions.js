@@ -1,9 +1,14 @@
 import $ from 'jquery';
+import YouTube from 'react-youtube';
 
 export const SET_SONGS = 'SET_SONGS';
 export const NAV_CHANGE = 'NAV_CHANGE';
 export const NUM_SONGS_CHANGE = 'NUM_SONGS_CHANGE';
 export const COUNTRY_CODE_CHANGE = 'COUNTRY_CODE_CHANGE';
+export const ADD_PLAYER = 'ADD_PLAYER';
+export const CHANGE_IS_PLAYING = 'CHANGE_IS_PLAYING';
+export const SET_ACTIVE_SONG = 'SET_ACTIVE_SONG';
+export const RESET_ACTIVE_SONG_IS_MUTED = 'RESET_ACTIVE_SONG_IS_MUTED';
 
 export const MAIN_NAV_ORDER = [0, 14, 21, 6, 12];
 export const SUB_NAV_ORDER = [20, 5, 11, 19];
@@ -145,6 +150,7 @@ export function newApisCall ({
             dispatch(setSongs(finalSongs));
             if (genreNum !== null) {
               dispatch(navChange(genreNum));
+              dispatch(resetActiveSongIsMuted());
             }
             if (totalNumSongs !== null) {
               dispatch(numSongsChange(totalNumSongs));
@@ -173,4 +179,90 @@ function numSongsChange (totalNumSongs) {
 
 function countryCodeChange (countryCode) {
   return { type: COUNTRY_CODE_CHANGE, payload: {countryCode}};
+}
+
+export function addPlayer (e) {
+  return { type: ADD_PLAYER, payload: {player: e.target}};
+}
+
+export function handleVideoStateChange (e) {
+  return function (dispatch, getState) {
+    let players = getState().players;
+    let targetId = e.target.a.id;
+    let activeSong = getState().activeSong;
+    let playing = getState().playing;
+    let songs = getState().songs;
+    let isMuted = getState().isMuted;
+    //if paused & active song, update active song info with 'paused'
+    if (e.data === 2){
+      if (activeSong.videoId === targetId){
+        dispatch(changeIsPlaying(false));
+      }
+    }
+    //if playing, pause all other videos
+    if (e.data === 1) {
+      players.forEach(player => {
+        if (player.a.id !== targetId) {
+          player.pauseVideo();
+        }
+      })
+      activeSong = songs.find(song => {
+        return song.videoId === targetId
+      });
+      dispatch(setActiveSong(activeSong));
+      dispatch(changeIsPlaying(true));
+    }
+    //if ended, refresh video to unstarted state
+    //and play next video on the list
+    if (e.data === 0) {
+      players.forEach(player => {
+        if (player.a.id === targetId) {
+          player.stopVideo(-1);
+        }
+      })
+      activeSong = playNextVideo(players, songs, targetId, isMuted); //DO NEED .THIS???
+      dispatch(setActiveSong(activeSong));
+      dispatch(changeIsPlaying(true));
+    }
+  }
+}
+
+const playNextVideo = (players, songs, targetId, isMuted, nextBoolean=true) => {
+  let positionNext = songs.find(song => {
+      return song.videoId === targetId
+    }).position;
+  nextBoolean ? positionNext += 1 : positionNext -= 1;
+  //if at end of list, play first video
+  if (positionNext > songs.length){
+    positionNext = 1;
+  } else if (positionNext === 0) {
+    positionNext = songs.length;
+  }
+  let videoIdNext = songs.find(song => {
+    return song.position === positionNext;
+  }).videoId;
+  players.forEach(player => {
+    if (player.a.id === videoIdNext) {
+      player.playVideo();
+      if (isMuted){
+        player.mute();
+      }
+    }
+  });
+  return songs[positionNext-1];
+}
+
+function changeIsPlaying (isPlaying) {
+  return { type: CHANGE_IS_PLAYING, payload: {isPlaying}};
+}
+
+function setActiveSong (activeSong) {
+  return { type: SET_ACTIVE_SONG, payload: {activeSong}};
+}
+
+function resetActiveSongIsMuted () {
+  return {
+    type: RESET_ACTIVE_SONG_IS_MUTED,
+    payload: {activeSong: null, isMuted: false}
+  };
 }
