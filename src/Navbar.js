@@ -13,6 +13,7 @@ import {
   MAIN_NAV_ORDER,
   SUB_NAV_ORDER
 } from './actions';
+import PlaylistControls from './PlaylistControls';
 import './Navbar.css';
 
 class Navbar extends Component {
@@ -35,7 +36,6 @@ class Navbar extends Component {
 
     let subcategories = SUB_NAV_ORDER.map(genreNum => {
       let name = GENRE_NUM_LOOKUP[genreNum];
-      let active = this.props.genreNum === genreNum ? "active" : "";
       return (
         <MenuItem
           onClick={() => this.props.newApisCall({genreNum})}
@@ -56,6 +56,7 @@ class Navbar extends Component {
         <NavbarBS.Header>
           <NavbarBS.Brand>
             <a className="navbarBrand" onClick="">Top Songs</a>
+            <PlaylistControls />
           </NavbarBS.Brand>
           <NavbarBS.Toggle />
         </NavbarBS.Header>

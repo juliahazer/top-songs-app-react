@@ -11,19 +11,23 @@
   margin-left: 0px;
 }
 
+.navbar-collapse {
+  background-color: #222222;
+}
+
 /*hamburger menu on smaller screens*/
-.NavbarBS .navbar-toggle {
+/*.NavbarBS .navbar-toggle {
   background-color: #fed136;
   border-color: #fed136;
   text-transform: uppercase;
   color: white;
   font-size: 12px;
-}
+}*/
 
-.NavbarBS .navbar-toggle:hover,
+/*.NavbarBS .navbar-toggle:hover,
 .NavbarBS .navbar-toggle:focus {
   background-color: #fed136;
-}
+}*/
 
 /*"Top Songs" brand*/
 .NavbarBS .navbarBrand {
@@ -31,6 +35,10 @@
   text-transform: uppercase;
   padding-right: 30px;
   color: #fed136 !important;
+}
+
+.NavbarBS {
+  height: 80px !important;
 }
 
 .NavbarBS .navbarBrand:hover,
@@ -44,28 +52,12 @@
   display: block;
 }
 
-/*Playlist controls*/
-.NavbarBS #playlistControls {
-  display: block;
-  padding-top: 10px;
-  padding-bottom: 5px;
+.navbar-brand {
+  font-size: 14px !important;
 }
 
-.NavbarBS #playlistControls a,
-.NavbarBS #playlistControls a:focus {
-  background-color: #f2c503;
-  color: black;
-  outline: none;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  transition: all 0.3s;
-  border: none;
-}
-
-.NavbarBS #playlistControls a:hover,
-.NavbarBS #playlistControls a:active {
-  background-color: #222222;
-  color: #f2c503;
+.navbarBrand:hover {
+  text-decoration: none;
 }
 
 /*Nav bar links*/
@@ -133,6 +125,12 @@
 .NavDropdown.activeDropdown {
   color: white;
   background-color: #fec503;
+}
+
+@media (min-width: 768px) {
+  .navbar-nav {
+    float: none !important;
+  }
 }
 
 

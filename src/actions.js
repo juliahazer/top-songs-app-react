@@ -1,15 +1,15 @@
 import $ from 'jquery';
-import YouTube from 'react-youtube';
 
 export const SET_SONGS = 'SET_SONGS';
+export const SET_PLAYERS = 'SET_PLAYERS';
 export const NAV_CHANGE = 'NAV_CHANGE';
 export const NUM_SONGS_CHANGE = 'NUM_SONGS_CHANGE';
 export const COUNTRY_CODE_CHANGE = 'COUNTRY_CODE_CHANGE';
 export const ADD_PLAYER = 'ADD_PLAYER';
+export const SET_PLAYERS_LOADED = 'SET_PLAYERS_LOADED';
 export const CHANGE_IS_PLAYING = 'CHANGE_IS_PLAYING';
 export const CHANGE_IS_MUTED = 'CHANGE_IS_MUTED';
-export const SET_ACTIVE_SONG = 'SET_ACTIVE_SONG';
-export const RESET_ACTIVE_SONG_IS_MUTED = 'RESET_ACTIVE_SONG_IS_MUTED';
+export const SET_ACTIVE_SONG_IDX = 'SET_ACTIVE_SONG_IDX';
 
 export const MAIN_NAV_ORDER = [0, 14, 21, 6, 12];
 export const SUB_NAV_ORDER = [20, 5, 11, 19];
@@ -93,6 +93,9 @@ export function newApisCall ({
   numCountDiff = 0
 } = {}) {
   return function (dispatch, getState) {
+    let activeSongIdx = getState().activeSongIdx;
+    let newGenreNum = null !== genreNum;
+    let newCountryCode = null !== countryCode;
     genreNum = genreNum !== null ? genreNum : getState().genreNum;
     countryCode = countryCode || getState().countryCode;
     if (totalNumSongs !== null) {
@@ -128,7 +131,7 @@ export function newApisCall ({
       to each song object*/
       newSongsArr.forEach(song => {
         let youtubeAPIUrl = setYouTubeAPIUrl(song);
-        let songsState = getState().songs.slice();
+        let songsState = getState().songs;
         $.ajax({
           method: "GET",
           url: youtubeAPIUrl,
@@ -143,21 +146,49 @@ export function newApisCall ({
           is retrieved, then display html of all results*/
           if (count === totalNumSongs) {
             let finalSongs;
+            let players = getState().players;
+            //if adding new songs
             if (numCountDiff > 0) {
               finalSongs = songsState.concat(newSongsArr);
+              //
+              // if (activeSongIdx >= songsState.length) {
+              //   dispatch(setActiveSongIdx(-1));
+              //   dispatch(changeIsPlaying(false));
+              // }
             } else {
               finalSongs = newSongsArr;
+            }
+            if (numCountDiff < 0) {
+              players = players.filter(player => {
+                return finalSongs.find(song => {
+                  return song.videoId === player.a.id;
+                }) !== undefined && player.a !== null;
+              });
+              dispatch(setPlayers(players));
             }
             dispatch(setSongs(finalSongs));
             if (genreNum !== null) {
               dispatch(navChange(genreNum));
-              dispatch(resetActiveSongIsMuted());
             }
             if (totalNumSongs !== null) {
               dispatch(numSongsChange(totalNumSongs));
             }
             if (countryCode !== null) {
               dispatch(countryCodeChange(countryCode));
+            }
+            //reset for new selections
+            if (newGenreNum || newCountryCode) {
+              //stops old video if one is the same
+              if (activeSongIdx > -1) {
+                players.forEach(player => {
+                  if (player.a.id === songsState[activeSongIdx].videoId) {
+                    player.stopVideo(-1);
+                  }
+                })
+              }
+              dispatch(setActiveSongIdx(-1));
+              dispatch(changeIsPlaying(false));
+              dispatch(changeIsMuted(false));
             }
           }
         });
@@ -168,6 +199,10 @@ export function newApisCall ({
 
 function setSongs (songs) {
   return { type: SET_SONGS, payload: {songs}};
+}
+
+function setPlayers (players) {
+  return { type: SET_PLAYERS, payload: {players}};
 }
 
 function navChange (genreNum) {
@@ -182,94 +217,153 @@ function countryCodeChange (countryCode) {
   return { type: COUNTRY_CODE_CHANGE, payload: {countryCode}};
 }
 
-export function addPlayer (e) {
-  return { type: ADD_PLAYER, payload: {player: e.target}};
+export function addPlayerAndCheckAllLoaded (e) {
+  return function (dispatch, getState) {
+    if (getState().players.length + 1 === getState().songs.length) {
+      dispatch(setPlayersLoaded(true));
+    }
+    let player = e.target;
+    dispatch(addPlayer(player));
+  }
+}
+
+function addPlayer (player) {
+  return { type: ADD_PLAYER, payload: {player}};
+}
+
+function setPlayersLoaded (areLoaded) {
+  return { type: SET_PLAYERS_LOADED, payload: {areLoaded}};
 }
 
 export function handleVideoStateChange (e) {
   return function (dispatch, getState) {
     let players = getState().players;
     let targetId = e.target.a.id;
-    let activeSong = getState().activeSong;
-    let playing = getState().playing;
+    let activeSongIdx = getState().activeSongIdx;
     let songs = getState().songs;
     let isMuted = getState().isMuted;
     //if paused & active song, update active song info with 'paused'
     if (e.data === 2){
-      if (activeSong.videoId === targetId){
+      if (songs[activeSongIdx].videoId === targetId){
         dispatch(changeIsPlaying(false));
       }
     }
-    //if playing, pause all other videos
-    if (e.data === 1) {
+    //if playing...
+    else if (e.data === 1) {
+      //if already another video playing, pause it
+      if (activeSongIdx !== -1) {
+        if (targetId !== songs[activeSongIdx].videoId) {
+          players.forEach(player => {
+            if (player.a.id === songs[activeSongIdx].videoId) {
+              player.pauseVideo();
+            }
+          });
+        }
+      }
+      //mute player if state is set to mute
       players.forEach(player => {
-        if (player.a.id !== targetId) {
-          player.pauseVideo();
+        if (player.a.id === targetId) {
+          if (isMuted) {
+            player.mute();
+          }
         }
       })
-      activeSong = songs.find(song => {
+      //store index of new video playing
+      activeSongIdx = songs.findIndex(song => {
         return song.videoId === targetId
       });
-      dispatch(setActiveSong(activeSong));
+      dispatch(setActiveSongIdx(activeSongIdx));
       dispatch(changeIsPlaying(true));
     }
     //if ended, refresh video to unstarted state
     //and play next video on the list
-    if (e.data === 0) {
+    else if (e.data === 0) {
       players.forEach(player => {
         if (player.a.id === targetId) {
           player.stopVideo(-1);
         }
       })
-      activeSong = playNextVideo(players, songs, targetId, isMuted); //DO NEED .THIS???
-      dispatch(setActiveSong(activeSong));
+      activeSongIdx = playNextVideo(players, songs, activeSongIdx, isMuted);
+      dispatch(setActiveSongIdx(activeSongIdx));
       dispatch(changeIsPlaying(true));
     }
   }
 }
 
-const playNextVideo = (players, songs, targetId, isMuted, nextBoolean=true) => {
-  let positionNext = songs.find(song => {
-      return song.videoId === targetId
-    }).position;
+const playNextVideo = (players, songs, activeSongIdx, isMuted, nextBoolean=true) => {
+  let positionNext = songs[activeSongIdx].position;
   nextBoolean ? positionNext += 1 : positionNext -= 1;
   //if at end of list, play first video
   if (positionNext > songs.length){
     positionNext = 1;
-  } else if (positionNext === 0) {
+  } else if (positionNext === 0) { //if start of list, play last video
     positionNext = songs.length;
   }
-  let videoIdNext = songs.find(song => {
+  let newActiveSongIdx = songs.findIndex(song => {
     return song.position === positionNext;
-  }).videoId;
+  });
+  // let countPause = 0;
+  let countPlay = 0;
   players.forEach(player => {
-    if (player.a.id === videoIdNext) {
-      player.playVideo();
-      if (isMuted){
-        player.mute();
+    if (player.a.id === songs[activeSongIdx].videoId) {
+      // if (countPause === 0){
+        player.pauseVideo();
+        // countPause++;
+      // }
+    } else if (player.a.id === songs[newActiveSongIdx].videoId) {
+      if (countPlay === 0) {
+        player.playVideo();
+        countPlay++;
+        if (isMuted){
+          player.mute();
+        }
       }
     }
   });
-  return songs[positionNext-1];
+  return newActiveSongIdx;
+}
+
+export function handlePlayNextControl(e, nextBoolean) {
+  return function (dispatch, getState) {
+    e.preventDefault();
+    let activeSongIdx = getState().activeSongIdx;
+    let songs = getState().songs;
+    let players = getState().players;
+    let isMuted = getState().isMuted;
+    //if first time playing a video,
+    //set play either first or last video
+    if (activeSongIdx === -1) {
+      activeSongIdx = nextBoolean ? songs.length - 1 : 0;
+      dispatch(changeIsPlaying(true));
+    }
+    let newActiveSongIdx = playNextVideo(players, songs,
+      activeSongIdx, isMuted, nextBoolean);
+    dispatch(setActiveSongIdx(newActiveSongIdx));
+  }
 }
 
 export function handleMuteControl (e) {
   return function (dispatch, getState) {
     e.preventDefault();
     let players = getState().players.slice();
-    let activeSong = Object.assign({}, getState().activeSong);
+    let songs = getState().songs;
+    let activeSongIdx = getState().activeSongIdx;
     let isMuted = getState().isMuted;
-    players.forEach(player => {
-      if (player.a.id === activeSong.videoId){
-        if (player.isMuted()){
-          player.unMute();
-           isMuted = false;
-        } else {
-          player.mute();
-          isMuted = true;
+    if (activeSongIdx !== -1) {
+      players.forEach(player => {
+        if (player.a.id === songs[activeSongIdx].videoId){
+          if (player.isMuted()){
+            player.unMute();
+            isMuted = false;
+          } else {
+            player.mute();
+            isMuted = true;
+          }
         }
-      }
-    });
+      });
+    } else {
+      isMuted = !isMuted;
+    }
     dispatch(changeIsMuted(isMuted));
   }
 }
@@ -278,22 +372,32 @@ export function handlePlayPauseControl (e) {
   return function (dispatch, getState) {
     e.preventDefault();
     let players = getState().players;
-    let activeSong = getState().activeSong;
+    let songs = getState().songs;
+    let activeSongIdx = getState().activeSongIdx;
     let isPlaying = getState().isPlaying;
-    players.forEach(player => {
-      if (player.a.id === activeSong.videoId){
-        if (isPlaying){
-          player.pauseVideo();
-        } else {
-          player.playVideo();
+    if (activeSongIdx !== -1) {
+      players.forEach(player => {
+        if (player.a.id === songs[activeSongIdx].videoId){
+          if (isPlaying){
+            player.pauseVideo();
+          } else {
+            player.playVideo();
+          }
+          isPlaying = !isPlaying;
         }
-        isPlaying = !isPlaying;
-      }
-    });
-    dispatch(changeIsPlaying(isPlaying));
+      });
+      dispatch(changeIsPlaying(isPlaying));
+    }
   }
 }
 
+export function getActiveSong () {
+  return function (dispatch, getState) {
+    let songs = getState().songs;
+    let activeSongIdx = getState().activeSongIdx;
+    return activeSongIdx === -1 ? null : songs[activeSongIdx];
+  }
+}
 
 function changeIsPlaying (isPlaying) {
   return { type: CHANGE_IS_PLAYING, payload: {isPlaying}};
@@ -303,13 +407,6 @@ function changeIsMuted (isMuted) {
   return { type: CHANGE_IS_MUTED, payload: {isMuted}};
 }
 
-function setActiveSong (activeSong) {
-  return { type: SET_ACTIVE_SONG, payload: {activeSong}};
-}
-
-function resetActiveSongIsMuted () {
-  return {
-    type: RESET_ACTIVE_SONG_IS_MUTED,
-    payload: {activeSong: null, isMuted: false}
-  };
+function setActiveSongIdx (activeSongIdx) {
+  return { type: SET_ACTIVE_SONG_IDX, payload: {activeSongIdx}};
 }

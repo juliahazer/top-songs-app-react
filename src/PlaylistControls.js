@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './PlaylistControls.css';
 import {
+  handlePlayNextControl,
   handlePlayPauseControl,
-  handleMuteControl
+  handleMuteControl,
 } from './actions';
 
 class PlaylistControls extends Component {
@@ -13,21 +14,21 @@ class PlaylistControls extends Component {
       "glyphicon-volume-off " : "glyphicon-volume-up";
     let playListControlsDiv;
     //only show playListControls when all players are loaded
-    if (this.props.players.length === this.props.songs.length) {
+    if (this.props.arePlayersLoaded) {
       playListControlsDiv = (
        <div id="playlistControls">
-          {/*<a id="prevSong" className="resume btn btn-default btn-sm" role="button" href="" onClick={e => this.handlePlayNextControl(e, false)}>
+          <a id="prevSong" className="resume btn btn-default btn-sm" role="button" href="" onClick={e => this.props.handlePlayNextControl(e, false)}>
             <span className="glyphicon glyphicon-backward" aria-hidden="true"></span>
-          </a>*/}
+          </a>
           <a id="playPauseSong" className="firstStart btn btn-default btn-sm" role="button" href="" onClick={this.props.handlePlayPauseControl}>
             <span className={`glyphicon ${playPauseControlGlyph}`} aria-hidden="true"></span>
           </a>
           <a id="muteSong" className="btn btn-default btn-sm" role="button" href="" onClick={this.props.handleMuteControl}>
             <span className={`glyphicon ${muteControlGlyph}`} aria-hidden="true"></span>
           </a>
-          {/*<a id="nextSong" className="resume btn btn-default btn-sm" role="button" href="" onClick={e => this.handlePlayNextControl(e, true)}>
+          <a id="nextSong" className="resume btn btn-default btn-sm" role="button" href="" onClick={e => this.props.handlePlayNextControl(e, true)}>
             <span className="glyphicon glyphicon-forward" aria-hidden="true"></span>
-          </a>*/}
+          </a>
         </div>
       );
     }
@@ -41,16 +42,16 @@ class PlaylistControls extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    players: state.players,
-    songs: state.songs,
-    // isPlaying: state.isPlaying,
+    arePlayersLoaded: state.arePlayersLoaded,
+    isPlaying: state.isPlaying,
     isMuted: state.isMuted
   }
 };
 
 const mapDispatchToProps = {
-  handleMuteControl,
-  handlePlayPauseControl
+  handlePlayNextControl,
+  handlePlayPauseControl,
+  handleMuteControl
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaylistControls);

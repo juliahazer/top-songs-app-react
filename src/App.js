@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Navbar from './Navbar';
-import PlaylistControls from './PlaylistControls';
 import SongPlayingInfo from './SongPlayingInfo';
 import SongTable from './SongTable';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -93,7 +92,6 @@ class App extends Component {
           </div>
         </div>
 
-        <PlaylistControls />
         <SongPlayingInfo />
         <SongTable />
       </div>

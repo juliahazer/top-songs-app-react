@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import YouTube from 'react-youtube';
 import {
-  addPlayer,
+  addPlayerAndCheckAllLoaded,
   handleVideoStateChange
 } from './actions';
 
@@ -18,14 +18,17 @@ class YouTubePlayer extends Component {
         videoId={this.props.videoId}
         id={this.props.videoId}
         opts={OPTS}
-        onReady={this.props.addPlayer.bind(this)}
+        onReady={this.props.addPlayerAndCheckAllLoaded.bind(this)}
         onStateChange={this.props.handleVideoStateChange.bind(this)}
       />
     )
   }
 }
 
-const mapDispatchToProps = { addPlayer, handleVideoStateChange };
+const mapDispatchToProps = {
+  addPlayerAndCheckAllLoaded,
+  handleVideoStateChange
+};
 
 export default connect(null, mapDispatchToProps)(YouTubePlayer);
 

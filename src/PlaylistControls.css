@@ -1,6 +1,9 @@
 /************* PLAYLIST CONTROLS *************/
 #playlistControls {
-  padding-left: 12px;
+  display: block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 0px;
 }
 
 #playlistControls a,

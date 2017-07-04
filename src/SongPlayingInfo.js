@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { getActiveSong } from './actions';
 import './SongPlayingInfo.css';
 
 class SongPlayingInfo extends Component {
@@ -9,8 +10,10 @@ class SongPlayingInfo extends Component {
       activeSongTxtName,
       glyphClass,
       muteTxt;
-    if (this.props.activeSong !== null) {
-      if (this.props.activeSong.position !== undefined){
+    if (this.props.activeSongIdx !== -1) {
+      let activeSong = this.props.getActiveSong();
+      if (activeSong.position !== undefined){
+        muteTxt = this.props.isMuted ? "MUTED: " : "";
         if (this.props.isPlaying) {
           activeSongTxtState = "Playing";
           glyphClass = "glyphicon-play-circle";
@@ -22,12 +25,11 @@ class SongPlayingInfo extends Component {
             className={`playPauseGlyph glyphicon ${glyphClass}`}
             aria-hidden="true">
           </span>;
-        activeSongTxtName = `#${this.props.activeSong.position}: `
-          + `${this.props.activeSong.songName} by `
-          + `${this.props.activeSong.artist}`;
+        activeSongTxtName = `#${activeSong.position}: `
+          + `${activeSong.songName} by `
+          + `${activeSong.artist}`;
       }
     }
-    muteTxt = this.props.isMuted ? "MUTED: " : "";
     return (
       <div id="songPlaying">
         {muteTxt}
@@ -41,10 +43,14 @@ class SongPlayingInfo extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    activeSong: state.activeSong,
+    activeSongIdx: state.activeSongIdx,
     isPlaying: state.isPlaying,
     isMuted: state.isMuted
   }
 };
 
-export default connect(mapStateToProps)(SongPlayingInfo);
+const mapDispatchToProps = {
+  getActiveSong
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SongPlayingInfo);

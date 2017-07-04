@@ -1,22 +1,24 @@
 import {
   SET_SONGS,
+  SET_PLAYERS,
   NAV_CHANGE,
   NUM_SONGS_CHANGE,
   COUNTRY_CODE_CHANGE,
   ADD_PLAYER,
+  SET_PLAYERS_LOADED,
   CHANGE_IS_PLAYING,
   CHANGE_IS_MUTED,
-  SET_ACTIVE_SONG,
-  RESET_ACTIVE_SONG_IS_MUTED
+  SET_ACTIVE_SONG_IDX
 } from './actions';
 
 const DEFAULT_STATE = {
   countryCode: 'us',
   genreNum: 0,
-  totalNumSongs: 3,
+  totalNumSongs: 5,
   songs: [],
   players: [],
-  activeSong: null,
+  arePlayersLoaded: false,
+  activeSongIdx: -1,
   isMuted: false,
   isPlaying: false
 }
@@ -29,6 +31,13 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return {
         ...state,
         songs: songsArr
+      }
+    case SET_PLAYERS:
+      let playersArr = action.payload.players.slice();
+      playersArr = playersArr.map(player => Object.assign({}, player));
+      return {
+        ...state,
+        players: playersArr
       }
     case NAV_CHANGE:
       return {
@@ -50,6 +59,11 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
         ...state,
         players: [...state.players, action.payload.player]
       }
+    case SET_PLAYERS_LOADED:
+      return {
+        ...state,
+        arePlayersLoaded: action.payload.areLoaded
+      }
     case CHANGE_IS_PLAYING:
       return {
         ...state,
@@ -60,16 +74,10 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
         ...state,
         isMuted: action.payload.isMuted
       }
-    case SET_ACTIVE_SONG:
+    case SET_ACTIVE_SONG_IDX:
       return {
         ...state,
-        activeSong: action.payload.activeSong
-      }
-    case RESET_ACTIVE_SONG_IS_MUTED:
-      return {
-        ...state,
-        activeSong: action.payload.activeSong,
-        isMuted: action.payload.isMuted
+        activeSongIdx: action.payload.activeSongIdx
       }
     default:
       return state;
