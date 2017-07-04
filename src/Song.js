@@ -4,8 +4,7 @@ import './Song.css';
 
 const Song = ({
   position, name, artist, bioUrl,
-  nameBio, videoId, handleVideoOnReady,
-  handleVideoStateChange
+  nameBio, videoId
 }) => (
   <tr id={`pos ${position}`} className="songRow text-left">
     <td>
@@ -28,13 +27,7 @@ const Song = ({
       </div>
     </td>
     <td>
-      <YouTubePlayer
-        key={`player ${position}`}
-        id={`player ${position}`}
-        videoId = {videoId}
-        handleVideoOnReady = {handleVideoOnReady}
-        handleVideoStateChange = {handleVideoStateChange}
-      />
+      <YouTubePlayer videoId={videoId} />
     </td>
   </tr>
 )

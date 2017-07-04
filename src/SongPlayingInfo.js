@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import './SongPlayingInfo.css';
 
 class SongPlayingInfo extends Component {
   render() {
@@ -26,7 +27,7 @@ class SongPlayingInfo extends Component {
           + `${this.props.activeSong.artist}`;
       }
     }
-    muteTxt = this.props.isMuted ? "MUTED " : "";
+    muteTxt = this.props.isMuted ? "MUTED: " : "";
     return (
       <div id="songPlaying">
         {muteTxt}

@@ -7,6 +7,7 @@ export const NUM_SONGS_CHANGE = 'NUM_SONGS_CHANGE';
 export const COUNTRY_CODE_CHANGE = 'COUNTRY_CODE_CHANGE';
 export const ADD_PLAYER = 'ADD_PLAYER';
 export const CHANGE_IS_PLAYING = 'CHANGE_IS_PLAYING';
+export const CHANGE_IS_MUTED = 'CHANGE_IS_MUTED';
 export const SET_ACTIVE_SONG = 'SET_ACTIVE_SONG';
 export const RESET_ACTIVE_SONG_IS_MUTED = 'RESET_ACTIVE_SONG_IS_MUTED';
 
@@ -252,8 +253,54 @@ const playNextVideo = (players, songs, targetId, isMuted, nextBoolean=true) => {
   return songs[positionNext-1];
 }
 
+export function handleMuteControl (e) {
+  return function (dispatch, getState) {
+    e.preventDefault();
+    let players = getState().players.slice();
+    let activeSong = Object.assign({}, getState().activeSong);
+    let isMuted = getState().isMuted;
+    players.forEach(player => {
+      if (player.a.id === activeSong.videoId){
+        if (player.isMuted()){
+          player.unMute();
+           isMuted = false;
+        } else {
+          player.mute();
+          isMuted = true;
+        }
+      }
+    });
+    dispatch(changeIsMuted(isMuted));
+  }
+}
+
+export function handlePlayPauseControl (e) {
+  return function (dispatch, getState) {
+    e.preventDefault();
+    let players = getState().players;
+    let activeSong = getState().activeSong;
+    let isPlaying = getState().isPlaying;
+    players.forEach(player => {
+      if (player.a.id === activeSong.videoId){
+        if (isPlaying){
+          player.pauseVideo();
+        } else {
+          player.playVideo();
+        }
+        isPlaying = !isPlaying;
+      }
+    });
+    dispatch(changeIsPlaying(isPlaying));
+  }
+}
+
+
 function changeIsPlaying (isPlaying) {
   return { type: CHANGE_IS_PLAYING, payload: {isPlaying}};
+}
+
+function changeIsMuted (isMuted) {
+  return { type: CHANGE_IS_MUTED, payload: {isMuted}};
 }
 
 function setActiveSong (activeSong) {

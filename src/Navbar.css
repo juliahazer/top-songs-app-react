@@ -30,14 +30,14 @@
   font-size: 2em;
   text-transform: uppercase;
   padding-right: 30px;
-  color: #fed136;
+  color: #fed136 !important;
 }
 
 .NavbarBS .navbarBrand:hover,
 .NavbarBS .navbarBrand:focus,
 .NavbarBS .navbarBrand:active,
 .NavbarBS .navbarBrand.active {
-  color: #fec503;
+  color: #fec503 !important;
 }
 
 .NavbarBS #brandTitle {
@@ -129,7 +129,6 @@
 #dropdown-basic-other:hover {
   color: #fec503 !important;
 }
-
 
 .NavDropdown.activeDropdown {
   color: white;

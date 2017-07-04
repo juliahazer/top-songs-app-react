@@ -5,6 +5,7 @@ import {
   COUNTRY_CODE_CHANGE,
   ADD_PLAYER,
   CHANGE_IS_PLAYING,
+  CHANGE_IS_MUTED,
   SET_ACTIVE_SONG,
   RESET_ACTIVE_SONG_IS_MUTED
 } from './actions';
@@ -53,6 +54,11 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return {
         ...state,
         isPlaying: action.payload.isPlaying
+      }
+    case CHANGE_IS_MUTED:
+      return {
+        ...state,
+        isMuted: action.payload.isMuted
       }
     case SET_ACTIVE_SONG:
       return {

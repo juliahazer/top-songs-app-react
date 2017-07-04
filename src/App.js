@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import Navbar from './Navbar';
+import PlaylistControls from './PlaylistControls';
+import SongPlayingInfo from './SongPlayingInfo';
 import SongTable from './SongTable';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import Navbar from './Navbar';
+
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
@@ -90,6 +93,8 @@ class App extends Component {
           </div>
         </div>
 
+        <PlaylistControls />
+        <SongPlayingInfo />
         <SongTable />
       </div>
     );
@@ -106,8 +111,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     countryCode: state.countryCode,
     genreNum: state.genreNum,
-    totalNumSongs: state.totalNumSongs,
-    songs: state.songs
+    totalNumSongs: state.totalNumSongs
   }
 };
 

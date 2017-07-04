@@ -1,22 +1,3 @@
-/************* SONG PLAYING INFO (yellow background) *************/
-#songPlaying {
-  font-style: italic;
-  font-size: 1.3em;
-  background-color: #fec503;
-  color: #222222;
-  padding: 5px;
-  padding-left: 8px;
-  margin-bottom: 5px;
-  border-radius: 3px;
-}
-
-#songPlaying .playPauseGlyph {
-  position: relative;
-  top: 3px;
-  padding-right: 3px;
-  padding-left: 3px;
-}
-
 /************* PLAYLIST CONTROLS *************/
 #playlistControls {
   padding-left: 12px;
