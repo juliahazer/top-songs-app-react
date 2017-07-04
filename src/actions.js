@@ -302,13 +302,11 @@ const playNextVideo = (players, songs, activeSongIdx, isMuted, nextBoolean=true)
   let newActiveSongIdx = songs.findIndex(song => {
     return song.position === positionNext;
   });
-  // let countPause = 0;
   let countPlay = 0;
   players.forEach(player => {
     if (player.a.id === songs[activeSongIdx].videoId) {
       // if (countPause === 0){
         player.pauseVideo();
-        // countPause++;
       // }
     } else if (player.a.id === songs[newActiveSongIdx].videoId) {
       if (countPlay === 0) {
@@ -387,6 +385,11 @@ export function handlePlayPauseControl (e) {
         }
       });
       dispatch(changeIsPlaying(isPlaying));
+    } else { //if no video played yet, play first video
+      let isMuted = getState().isMuted;
+      let newActiveSongIdx = playNextVideo(players, songs, songs.length-1, isMuted);
+      dispatch(setActiveSongIdx(newActiveSongIdx));
+      dispatch(changeIsPlaying(true));
     }
   }
 }
