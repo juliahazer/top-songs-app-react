@@ -4,7 +4,7 @@ body {
 
 /************* HEADER *************/
 #dropdownButtonsDiv {
-  margin-top: 90px;
+  margin-top: 100px;
 }
 
 #headingDiv .section-heading{
@@ -66,4 +66,3 @@ body {
 #dropdownButtonsDiv div#countriesBtn {
   margin-bottom: 0;
 }
-

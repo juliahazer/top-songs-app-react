@@ -55,7 +55,7 @@ class Navbar extends Component {
       <NavbarBS className="NavbarBS" inverse fixedTop>
         <NavbarBS.Header>
           <NavbarBS.Brand>
-            <a className="navbarBrand" onClick="">Top Songs</a>
+            <a id="navbarBrand" onClick="">Top Songs</a>
             <PlaylistControls />
           </NavbarBS.Brand>
           <NavbarBS.Toggle />

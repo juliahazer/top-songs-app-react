@@ -5,6 +5,7 @@
 .NavbarBS {
   background-color: #222222;
   border-color: transparent;
+  height: 90px;
 }
 
 .NavbarBS > .container {
@@ -13,80 +14,70 @@
 
 .navbar-collapse {
   background-color: #222222;
+  position: relative;
+  z-index: 1;
 }
 
 /*hamburger menu on smaller screens*/
-/*.NavbarBS .navbar-toggle {
+.navbar-toggle.collapsed {
   background-color: #fed136;
   border-color: #fed136;
   text-transform: uppercase;
   color: white;
   font-size: 12px;
-}*/
+}
 
-/*.NavbarBS .navbar-toggle:hover,
-.NavbarBS .navbar-toggle:focus {
-  background-color: #fed136;
-}*/
+.navbar-toggle:hover,
+.navbar-toggle:focus {
+  background-color: #fed136 !important;
+}
 
 /*"Top Songs" brand*/
-.NavbarBS .navbarBrand {
+#navbarBrand {
   font-size: 2em;
   text-transform: uppercase;
   padding-right: 30px;
-  color: #fed136 !important;
-}
-
-.NavbarBS {
-  height: 80px !important;
-}
-
-.NavbarBS .navbarBrand:hover,
-.NavbarBS .navbarBrand:focus,
-.NavbarBS .navbarBrand:active,
-.NavbarBS .navbarBrand.active {
-  color: #fec503 !important;
+  color: #fed136;
 }
 
 .NavbarBS #brandTitle {
   display: block;
 }
 
-.navbar-brand {
-  font-size: 14px !important;
+#navbarBrand {
+  font-size: 26px;
 }
 
-.navbarBrand:hover {
+#navbarBrand:hover {
   text-decoration: none;
 }
 
 /*Nav bar links*/
-.NavbarBS li a {
+.NavbarBS .NavItem.category a,
+.NavDropdown a {
   text-transform: uppercase;
   font-weight: 400;
   letter-spacing: 1px;
-  color: white !important;
+  color: white;
 }
 
-.NavbarBS li a:hover {
+.navbar-inverse .navbar-nav > li > a:hover {
+  /* using important due to react-bootstrap/bootstrap */
   color: #fed136 !important;
   outline: none;
 }
 
-.NavbarBS li a:focus {
-  color: #222222 !important;
-  outline: none;
-}
-
 /*Currently selected/active nav bar links*/
-.NavItem.active > a {
+.navbar-inverse .navbar-nav > li.active > a {
   border-radius: 0;
+  /* using important due to react-bootstrap/bootstrap */
   color: white !important;
-  background-color: #fed136 !important;
+  background-color: #fed136;
 }
 
 .NavItem.active > a:hover,
 .NavItem.active > a:focus {
+  /* using important due to react-bootstrap/bootstrap */
   color: white !important;
   background-color: #fec503 !important;
 }
@@ -114,11 +105,26 @@
   outline: none;
 }
 
-#dropdown-basic-other {
+.NavDropdown.subcategory.dropdown.open #dropdown-basic-other {
+  background-color: #222222;
+}
+
+.NavDropdown.subcategory.dropdown #dropdown-basic-other {
+  /* using important due to react-bootstrap/bootstrap */
   color: white !important;
 }
 
-#dropdown-basic-other:hover {
+.NavDropdown.subcategory.dropdown > a:hover {
+  color: #fed136 !important;
+}
+
+.NavDropdown.subcategory .dropdown-menu li a {
+  /* using important due to react-bootstrap/bootstrap */
+  color: white !important;
+}
+
+.NavDropdown.subcategory .dropdown-menu li a:hover {
+  /* using important due to react-bootstrap/bootstrap */
   color: #fec503 !important;
 }
 
@@ -129,9 +135,7 @@
 
 @media (min-width: 768px) {
   .navbar-nav {
+    /* using important due to react-bootstrap/bootstrap */
     float: none !important;
   }
 }
-
-
-
