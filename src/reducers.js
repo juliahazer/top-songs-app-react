@@ -14,7 +14,7 @@ import {
 const DEFAULT_STATE = {
   countryCode: 'us',
   genreNum: 0,
-  totalNumSongs: 2,
+  totalNumSongs: 5,
   songs: [],
   players: [],
   arePlayersLoaded: false,

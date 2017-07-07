@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import Navbar from './Navbar';
 import SongPlayingInfo from './SongPlayingInfo';
 import SongTable from './SongTable';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
@@ -14,9 +15,16 @@ import {
 } from './actions';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+  }
 
-  componentWillMount = () => {
-    this.props.newApisCall({totalNumSongs: this.props.totalNumSongs});
+  componentWillMount() {
+    if (this.props.location.pathname.slice(1) === "pop") {
+      this.props.newApisCall({genreNum: 14});
+    } else {
+      this.props.newApisCall({totalNumSongs: this.props.totalNumSongs});
+    }
   }
 
   render() {
@@ -27,7 +35,10 @@ class App extends Component {
         " active" : "";
       return (
         <MenuItem
-          onClick={() => this.props.newApisCall({totalNumSongs})}
+          onClick={() => {
+            this.props.newApisCall({totalNumSongs});
+            this.props.history.push(`/${totalNumSongs}`);
+          }}
           key={totalNumSongs}
           className={`numSongs ${active}`}>
             {totalNumSongs}
@@ -41,7 +52,10 @@ class App extends Component {
         " active": "";
       return (
         <MenuItem
-          onClick={() => this.props.newApisCall({countryCode})}
+          onClick={() => {
+            this.props.newApisCall({countryCode});
+            this.props.history.push(`/${countryCode}`);
+          }}
           key={country}
           name={country}
           id={countryCode}
@@ -91,9 +105,10 @@ class App extends Component {
 
           </div>
         </div>
-
         <SongPlayingInfo />
         <SongTable />
+
+        <Route path="/:genre" component={App} />
       </div>
     );
   }
@@ -115,4 +130,4 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = { newApisCall };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));

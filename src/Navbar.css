@@ -34,6 +34,8 @@
 
 /*"Top Songs" brand*/
 #navbarBrand {
+  position: relative;
+  z-index: 2;
   font-size: 2em;
   text-transform: uppercase;
   padding-right: 30px;
