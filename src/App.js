@@ -20,11 +20,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    if (this.props.location.pathname.slice(1) === "pop") {
-      this.props.newApisCall({genreNum: 14});
-    } else {
-      this.props.newApisCall({totalNumSongs: this.props.totalNumSongs});
-    }
+    this.props.newApisCall({totalNumSongs: this.props.totalNumSongs});
   }
 
   render() {
@@ -35,10 +31,7 @@ class App extends Component {
         " active" : "";
       return (
         <MenuItem
-          onClick={() => {
-            this.props.newApisCall({totalNumSongs});
-            this.props.history.push(`/${totalNumSongs}`);
-          }}
+          onClick={() => this.props.newApisCall({totalNumSongs})}
           key={totalNumSongs}
           className={`numSongs ${active}`}>
             {totalNumSongs}
