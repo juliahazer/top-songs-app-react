@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 import {
   Navbar as NavbarBS,
   Nav,
@@ -25,11 +24,7 @@ class Navbar extends Component {
       let active = this.props.genreNum === genreNum ? "active" : "";
       return (
         <NavItem
-          onClick={() => {
-            this.props.newApisCall({genreNum});
-            let categoryName = GENRE_NUM_LOOKUP[genreNum].toLowerCase();
-            this.props.history.push(`/${categoryName}`);
-          }}
+          onClick={() => this.props.newApisCall({genreNum})}
           key={name}
           href=""
           className={active + " NavItem category"}
@@ -97,4 +92,4 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = { newApisCall };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Navbar));
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

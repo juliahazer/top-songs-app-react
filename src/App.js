@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
-import { withRouter } from 'react-router';
 import Navbar from './Navbar';
 import SongPlayingInfo from './SongPlayingInfo';
 import SongTable from './SongTable';
@@ -15,9 +13,6 @@ import {
 } from './actions';
 
 class App extends Component {
-  constructor(props){
-    super(props);
-  }
 
   componentWillMount() {
     this.props.newApisCall({totalNumSongs: this.props.totalNumSongs});
@@ -45,10 +40,7 @@ class App extends Component {
         " active": "";
       return (
         <MenuItem
-          onClick={() => {
-            this.props.newApisCall({countryCode});
-            this.props.history.push(`/${countryCode}`);
-          }}
+          onClick={() => this.props.newApisCall({countryCode})}
           key={country}
           name={country}
           id={countryCode}
@@ -101,7 +93,6 @@ class App extends Component {
         <SongPlayingInfo />
         <SongTable />
 
-        <Route path="/:genre" component={App} />
       </div>
     );
   }
@@ -123,4 +114,4 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = { newApisCall };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);
